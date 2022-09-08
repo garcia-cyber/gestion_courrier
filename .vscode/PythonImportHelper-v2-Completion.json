@@ -1,0 +1,261 @@
+[
+    {
+        "label": "test",
+        "importPath": "cgi",
+        "description": "cgi",
+        "isExtraImport": true,
+        "detail": "cgi",
+        "documentation": {}
+    },
+    {
+        "label": "methods",
+        "importPath": "crypt",
+        "description": "crypt",
+        "isExtraImport": true,
+        "detail": "crypt",
+        "documentation": {}
+    },
+    {
+        "label": "render_doc",
+        "importPath": "pydoc",
+        "description": "pydoc",
+        "isExtraImport": true,
+        "detail": "pydoc",
+        "documentation": {}
+    },
+    {
+        "label": "S",
+        "importPath": "re",
+        "description": "re",
+        "isExtraImport": true,
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "Flask",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "session",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "render_template",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "redirect",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "url_for",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "flash",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "mysql.connector",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "mysql.connector",
+        "description": "mysql.connector",
+        "detail": "mysql.connector",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "index",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])\ndef index_send():\n    if request.method == 'POST':\n        mail        = request.form['mail_agent']\n        password    = request.form['password_agent']\n        cur = sql.cursor()\n        cur.execute(\"select * from agents where email_agent = %s and password_agent = %s \",(mail, password,))\n        test_cur = cur.fetchone()",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "index_send",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def index_send():\n    if request.method == 'POST':\n        mail        = request.form['mail_agent']\n        password    = request.form['password_agent']\n        cur = sql.cursor()\n        cur.execute(\"select * from agents where email_agent = %s and password_agent = %s \",(mail, password,))\n        test_cur = cur.fetchone()\n        if test_cur:\n            session['index_true']       = True\n            session['id_agent']         = test_cur[0]",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "forget",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def forget():\n    return render_template('forget.html')\n\"\"\"\n######################################################### DECONNEXION\n\"\"\"    \n@app.route('/deco')\ndef deco():\n    session.clear()\n    return redirect(url_for('index'))\n\"\"\"",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "deco",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def deco():\n    session.clear()\n    return redirect(url_for('index'))\n\"\"\"\n######################################################### PROFILE\n\"\"\"  \n@app.route('/profile')\ndef profile():\n    if 'index_true' in session:\n        return render_template('profile.html', a = session['index_true'])",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "profile",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def profile():\n    if 'index_true' in session:\n        return render_template('profile.html', a = session['index_true'])\n    else:\n        return  redirect(url_for('index')) \n\"\"\"\n######################################################### START ADMIN AND ALL PRIVELEGES\n\"\"\"\n#page admin \n@app.route('/admin')",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def admin():\n    if 'index_true' in session:\n        #liste de fonction \n        # \n        # \n        #  \n        fonction = sql.cursor()\n        fonction.execute(\"select * from fonctions\")\n        test_fontion = fonction.fetchall()\n        return render_template('admin.html', a = session['index_true'],aff_fonction = test_fontion)",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "register_agent",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def register_agent():\n    if 'index_true' in session:\n        #liste de fonction \n        # \n        # \n        #  \n        fonction = sql.cursor()\n        fonction.execute(\"select * from fonctions\")\n        test_fontion = fonction.fetchall()\n        return render_template('register_agent.html',a = session['index_true'], aff_agt = test_fontion)",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "admin_register_agent",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def admin_register_agent():\n    if request.method == \"POST\":\n        nom         = request.form['nom_agent']\n        mail        = request.form['mail_agent']\n        phone       = str(request.form['phone_agent'])\n        fonction    = request.form['fonction_agent']\n        #verification du mail existe \n        mail_existe = sql.cursor()\n        mail_existe.execute(\"select * from agents where email_agent = %s\",(mail,))\n        test_mail_existe = mail_existe.fetchone()",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "modifier_agent",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def modifier_agent(id_agent):\n    if 'index_true' in session:\n        if request.method == 'POST':\n            nom         = request.form['nom_agent']\n            mail        = request.form['mail_agent']\n            phone       = str(request.form['phone_agent'])\n            # fonction    = request.form['fonction_agent']\n            cur = sql.cursor()\n            cur.execute(\"update agents set nom_agent = %s , email_agent = %s , phone_agent = %s where id_agent = %s\",(nom,mail,phone,id_agent,))\n            sql.commit()",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "service",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def service():\n    if 'index_true' in session :\n        pass \n    else:\n        return redirect(url_for('index'))\n@app.route('/service_send_doc',methods=['POST'])\ndef service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['titre']\n        nature = request.files['nature_doc']",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "service_send_doc",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['titre']\n        nature = request.files['nature_doc']\n        id_agent = session['id_agent'] \n        if nature.filename != '':\n            send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)\n            send_file.save()\n            cur = sql.cursor()\n            cur.execute(\"insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)\",(titre,nature,id_agent,))",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "sql",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "sql = data.connect(host ='localhost', user = 'lagarxia',password = 'linux',database = 'sania')\napp = Flask(__name__)\napp.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/document'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "app = Flask(__name__)\napp.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/document'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "app.secret_key",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "app.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/document'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "app.config['UPLOAD_FOLDER1']",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "app.config['UPLOAD_FOLDER1'] = 'static/document'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])\ndef index_send():",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "@app.route('/index_send',methods",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "@app.route('/index_send',methods = ['POST'])\ndef index_send():\n    if request.method == 'POST':\n        mail        = request.form['mail_agent']\n        password    = request.form['password_agent']\n        cur = sql.cursor()\n        cur.execute(\"select * from agents where email_agent = %s and password_agent = %s \",(mail, password,))\n        test_cur = cur.fetchone()\n        if test_cur:\n            session['index_true']       = True",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "@app.route('/modifier_agent/<string:id_agent>',methods",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "@app.route('/modifier_agent/<string:id_agent>',methods = ['GET','POST'])\ndef modifier_agent(id_agent):\n    if 'index_true' in session:\n        if request.method == 'POST':\n            nom         = request.form['nom_agent']\n            mail        = request.form['mail_agent']\n            phone       = str(request.form['phone_agent'])\n            # fonction    = request.form['fonction_agent']\n            cur = sql.cursor()\n            cur.execute(\"update agents set nom_agent = %s , email_agent = %s , phone_agent = %s where id_agent = %s\",(nom,mail,phone,id_agent,))",
+        "detail": "main",
+        "documentation": {}
+    }
+]

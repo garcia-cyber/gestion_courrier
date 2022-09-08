@@ -129,12 +129,12 @@
                     
                     <li><a class="" href="" aria-expanded="true">
                         <i class="fas fa-user-tie"></i>
-                            <span class="nav-text">Liste membre <div style="position: relative;display: inline-block;color: red;">236</div></span>
+                            <span class="nav-text">Liste membre <div style="position: relative;display: inline-block;color: red;"></div></span>
                         </a>
                         
                     </li>
                     
-                    <li><a class="" href="ajouter-membre.php" aria-expanded="false">
+                    <li><a class="" href="/ajout" target="_blank" aria-expanded="false">
                             <i class="fa fa-user-plus"></i>
                             <span class="nav-text">Ajouter membre</span>
                         </a>
@@ -170,8 +170,8 @@
                                     <table class="table table-responsive-md" id="example4">
                                         <thead>
                                             <tr>
-                                                <th style="width:40px;"><strong>N°</strong></th>
-                                                <th></th>
+                                                <!-- <th style="width:40px;"><strong>N°</strong></th>
+                                                <th></th> -->
                                                 <th>Nom complet</th>
                                                 <th>Sexe</th>
                                                 <th>Mail</th>
@@ -181,25 +181,27 @@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><strong>01</strong></td>
-                                                <td><img class="rounded-circle" width="35" src="images/pic2.jpg" alt="" style="width: 35px;height: 35px;border-radius: 100%;"></td>
-                                                <td><a href="profil-membre.php">Mylord Mafuta</a></td>
-                                                <td>Masculin</td>
-                                                <td>mylordmafutaz@gmail.com</td>
-                                                <td>+000 000 000</td>
-                                                <td><span class="badge light badge-success">Ministre</span></td>
-                                                <td>12/02/08</td>
-                                                <td>
-                                                    <div class="d-flex">
-                                                        <a href="#" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>
-                                                        <a href="#" class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            
-                                        </tbody>
+                                       <tbody>
+                                            {% for i in aff_agent  %}
+                                                <tr>
+                                                    <!-- <td>{{i[0]}}</td> -->
+                                                    <td>{{i[1]}}</td>
+                                                    <td>{{i[6]}}</td>
+                                                    <td>{{i[2]}}</td>
+                                                    <td>{{i[3]}}</td>
+                                                    <td>{{i[4]}}</td>
+                                                    <td>{{i[6]}}</td>
+                                                    <td>
+                                                        <div class="d-flex">
+                                                            <a href="#" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>
+                                                            <a href="drop/{{i[0]}}" class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></a>
+                                                        </div>
+                                                        <!-- <a href="" class="btn btn-info" >Modifier</a>
+                                                        <a href="" class="btn btn-danger" >Supprimer</a> -->
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                       </tbody>
                                     </table>
                                 </div>
                             </div>

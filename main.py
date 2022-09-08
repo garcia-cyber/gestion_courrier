@@ -105,11 +105,28 @@ def deco():
 def profile():
 
     if 'index_true' in session:
+        
+
         return render_template('profile.html', a = session['index_true'])
     else:
         return  redirect(url_for('index')) 
 
+"""
+######################################################### AJOUT DES AGENTS 
 
+
+
+""" 
+
+@app.route('/ajout')
+def ajout():
+    if 'index_true' in session:
+        fnc = sql.cursor()
+        fnc.execute("select * from fonctions")
+        t = fnc.fetchall()
+        return render_template('ajout.html', a = session['index_true'],dat = t)
+    else:
+        return  redirect(url_for('index')) 
 
 
 """
@@ -127,28 +144,24 @@ def admin():
         fonction = sql.cursor()
         fonction.execute("select * from fonctions")
         test_fontion = fonction.fetchall()
-
-        return render_template('admin.html', a = session['index_true'],aff_fonction = test_fontion)
+        #liste des agents 
+        #
+        #
+        #
+        agent = sql.cursor()
+        agent.execute('select id_agent,nom_agent ,email_agent,phone_agent,libelle_fonction ,dateEnregistrement,sexe from agents inner join fonctions on agents.fk_fonction = fonctions.id_fonction ')
+        tAg = agent.fetchall()
+        return render_template('admin.html', a = session['index_true'],aff_fonction = test_fontion, aff_agent = tAg)
     else:
         return redirect(url_for('index'))
 
-#
-#
-# ADD AGENT
-@app.route('/register_agent')
-def register_agent():
-    if 'index_true' in session:
-        #liste de fonction 
-        # 
-        # 
-        #  
-        fonction = sql.cursor()
-        fonction.execute("select * from fonctions")
-        test_fontion = fonction.fetchall()
-        return render_template('register_agent.html',a = session['index_true'], aff_agt = test_fontion)
-    else:
-        return redirect(url_for('index'))    
 
+  
+
+"""
+######################################################### AJOUT DES AGENTS
+
+"""
 
 @app.route('/admin_register_agent',methods= ['GET','POST'])
 def admin_register_agent():
@@ -157,6 +170,9 @@ def admin_register_agent():
         mail        = request.form['mail_agent']
         phone       = str(request.form['phone_agent'])
         fonction    = request.form['fonction_agent']
+        sexe        = request.form['sexe_agent']
+
+       
 
         #verification du mail existe 
         mail_existe = sql.cursor()
@@ -176,7 +192,7 @@ def admin_register_agent():
         #
         #
         admin_existe = sql.cursor()
-        admin_existe.execute("select count(*) from agents group by fk_fonction having fk_fonction = 1 and count(*) >= 1")
+        admin_existe.execute("select count(*) from agents group by fk_fonction having fk_fonction = 1 and count(*) > 1")
         test_admin_existe = admin_existe.fetchone()
 
         #verification ministre existe deja 
@@ -184,7 +200,7 @@ def admin_register_agent():
         #
         #
         ministre_existe = sql.cursor()
-        ministre_existe.execute("select count(*) from agents group by fk_fonction having fk_fonction = 4 and count(*) >= 1")
+        ministre_existe.execute("select count(*) from agents group by fk_fonction having fk_fonction = 4 and count(*) > 1")
         test_ministre_existe = ministre_existe.fetchone()
 
         #verification dircab existe
@@ -192,43 +208,50 @@ def admin_register_agent():
         #
         #
         dircab_existe = sql.cursor()
-        dircab_existe.execute("select count(*) from agents group by fk_fonction having fk_fonction = 3 and count(*) >= 1")
+        dircab_existe.execute("select count(*) from agents group by fk_fonction having fk_fonction = 3 and count(*) > 1")
         test_dircab_existe = dircab_existe.fetchone()
 
 
         if test_mail_existe:
             flash("le mail exixte deja veillez change")
-            return redirect(url_for('register_agent'))
+            return redirect(url_for('ajout'))
         elif test_phone_existe:
             flash("ce numero existe deja veillez chande de numero")
-            return redirect(url_for('register_agent')) 
-        elif test_admin_existe:
+            return redirect(url_for('ajout')) 
+        elif int(fonction) == 1:
             flash("pas moyen d'avoir deux administrateur")
-            return redirect(url_for('register_agent')) 
+            return redirect(url_for('ajout')) 
         elif test_ministre_existe:
             flash("pas moyen d'avoir deux ministre dans le systeme")
-            return redirect(url_for('register_agent'))  
+            return redirect(url_for('ajout'))  
         elif test_dircab_existe:
             flash("pas moyen d'avoir deux directeur de cabinet dans le systeme")
-            return redirect(url_for('register_agent')) 
+            return redirect(url_for('ajout')) 
 
         else:
             cur = sql.cursor()
-            cur.execute("insert into agents(nom_agent,email_agent,phone_agent,fk_fonction )values(%s,%s,%s,%s)",(nom,mail,phone,fonction,))
+            cur.execute("insert into agents(nom_agent,email_agent,phone_agent,fk_fonction , sexe)values(%s,%s,%s,%s,%s)",(nom,mail,phone,fonction,sexe,))
             sql.commit()
             cur.close()
             if int(fonction) == 2:
                 flash("enregistrement de l'agent du service informatique reussi") 
-                return redirect(url_for('register_agent'))
+                return redirect(url_for('ajout'))
             elif int(fonction) == 3:
                 flash("enregistrement du dircab reussi") 
-                return redirect(url_for('register_agent'))
+                return redirect(url_for('ajout'))
             elif int(fonction) == 4:
                 flash("enregistrement du ministre reussi") 
-                return redirect(url_for('register_agent'))  
+                return redirect(url_for('ajout'))  
             else:
                 flash("enregistrement du conseiller reussi") 
-                return redirect(url_for('register_agent'))  
+                return redirect(url_for('ajout'))  
+
+
+
+"""
+######################################################### SUPPRESSION DES AGENTS
+
+"""
 
                 
 #
@@ -241,10 +264,11 @@ def modifier_agent(id_agent):
             nom         = request.form['nom_agent']
             mail        = request.form['mail_agent']
             phone       = str(request.form['phone_agent'])
+            sexe       = request.form['phone_agent']
             # fonction    = request.form['fonction_agent']
 
             cur = sql.cursor()
-            cur.execute("update agents set nom_agent = %s , email_agent = %s , phone_agent = %s where id_agent = %s",(nom,mail,phone,id_agent,))
+            cur.execute("update agents set nom_agent = %s , email_agent = %s , phone_agent = %s , sexe =%s  where id_agent = %s",(nom,mail,phone,id_agent,sexe, ))
             sql.commit()
             cur.close()
             flash("modification reussi")
@@ -290,7 +314,7 @@ def service_send_doc():
         id_agent = session['id_agent'] 
         if nature.filename != '':
             send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)
-            send_file.save()
+            nature.save(send_file)
 
             cur = sql.cursor()
             cur.execute("insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)",(titre,nature,id_agent,))

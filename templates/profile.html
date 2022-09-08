@@ -130,6 +130,29 @@
                     </li>
                     
                     <hr>
+                    {% if session['fonction_agent'] == 1 %}
+                    
+                    <li><a class="" href="" aria-expanded="true">
+                        <i class="fas fa-user-tie"></i>
+                            <span class="nav-text">Liste membre <div style="position: relative;display: inline-block;color: red;">nombre</div></span>
+                        </a>
+                        
+                    </li>
+                    
+                    <li><a class="" href="/ajout" aria-expanded="false">
+                            <i class="fa fa-user-plus"></i>
+                            <span class="nav-text">Ajouter membre</span>
+                        </a>
+                        
+                    </li>
+                    {%else%}
+                    <li><a class="" href="/ajout" aria-expanded="false">
+                        <i class="fa fa-user-plus"></i>
+                        <span class="nav-text">Send document</span>
+                    </a>
+                    
+                </li>
+                    {%endif%}
                     
                    
                     
@@ -160,6 +183,7 @@
                                
                                 <a class="btn btn-primary" href = ''>Modifier</a>
                                 <a class="btn btn-info" href = ''>Change Photo</a>
+                                <a class="btn btn-danger" href = ''>Modifier mot de passe</a>
                                 
                                 <!-- <button class="btn btn-success">Modifier</button>
                                 <button class="btn btn-danger">Supprimer</button> -->

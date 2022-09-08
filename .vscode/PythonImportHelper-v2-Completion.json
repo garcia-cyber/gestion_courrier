@@ -146,7 +146,16 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def profile():\n    if 'index_true' in session:\n        return render_template('profile.html', a = session['index_true'])\n    else:\n        return  redirect(url_for('index')) \n\"\"\"\n######################################################### START ADMIN AND ALL PRIVELEGES\n\"\"\"\n#page admin \n@app.route('/admin')",
+        "peekOfCode": "def profile():\n    if 'index_true' in session:\n        return render_template('profile.html', a = session['index_true'])\n    else:\n        return  redirect(url_for('index')) \n\"\"\"\n######################################################### AJOUT DES AGENTS \n\"\"\" \n@app.route('/ajout')\ndef ajout():",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "ajout",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def ajout():\n    if 'index_true' in session:\n        fnc = sql.cursor()\n        fnc.execute(\"select * from fonctions\")\n        t = fnc.fetchall()\n        return render_template('ajout.html', a = session['index_true'],dat = t)\n    else:\n        return  redirect(url_for('index')) \n\"\"\"\n######################################################### START ADMIN AND ALL PRIVELEGES",
         "detail": "main",
         "documentation": {}
     },
@@ -155,16 +164,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def admin():\n    if 'index_true' in session:\n        #liste de fonction \n        # \n        # \n        #  \n        fonction = sql.cursor()\n        fonction.execute(\"select * from fonctions\")\n        test_fontion = fonction.fetchall()\n        return render_template('admin.html', a = session['index_true'],aff_fonction = test_fontion)",
-        "detail": "main",
-        "documentation": {}
-    },
-    {
-        "label": "register_agent",
-        "kind": 2,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "def register_agent():\n    if 'index_true' in session:\n        #liste de fonction \n        # \n        # \n        #  \n        fonction = sql.cursor()\n        fonction.execute(\"select * from fonctions\")\n        test_fontion = fonction.fetchall()\n        return render_template('register_agent.html',a = session['index_true'], aff_agt = test_fontion)",
+        "peekOfCode": "def admin():\n    if 'index_true' in session:\n        #liste de fonction \n        # \n        # \n        #  \n        fonction = sql.cursor()\n        fonction.execute(\"select * from fonctions\")\n        test_fontion = fonction.fetchall()\n        #liste des agents ",
         "detail": "main",
         "documentation": {}
     },
@@ -173,7 +173,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def admin_register_agent():\n    if request.method == \"POST\":\n        nom         = request.form['nom_agent']\n        mail        = request.form['mail_agent']\n        phone       = str(request.form['phone_agent'])\n        fonction    = request.form['fonction_agent']\n        #verification du mail existe \n        mail_existe = sql.cursor()\n        mail_existe.execute(\"select * from agents where email_agent = %s\",(mail,))\n        test_mail_existe = mail_existe.fetchone()",
+        "peekOfCode": "def admin_register_agent():\n    if request.method == \"POST\":\n        nom         = request.form['nom_agent']\n        mail        = request.form['mail_agent']\n        phone       = str(request.form['phone_agent'])\n        fonction    = request.form['fonction_agent']\n        sexe        = request.form['sexe_agent']\n        #verification du mail existe \n        mail_existe = sql.cursor()\n        mail_existe.execute(\"select * from agents where email_agent = %s\",(mail,))",
         "detail": "main",
         "documentation": {}
     },
@@ -182,7 +182,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def modifier_agent(id_agent):\n    if 'index_true' in session:\n        if request.method == 'POST':\n            nom         = request.form['nom_agent']\n            mail        = request.form['mail_agent']\n            phone       = str(request.form['phone_agent'])\n            # fonction    = request.form['fonction_agent']\n            cur = sql.cursor()\n            cur.execute(\"update agents set nom_agent = %s , email_agent = %s , phone_agent = %s where id_agent = %s\",(nom,mail,phone,id_agent,))\n            sql.commit()",
+        "peekOfCode": "def modifier_agent(id_agent):\n    if 'index_true' in session:\n        if request.method == 'POST':\n            nom         = request.form['nom_agent']\n            mail        = request.form['mail_agent']\n            phone       = str(request.form['phone_agent'])\n            sexe       = request.form['phone_agent']\n            # fonction    = request.form['fonction_agent']\n            cur = sql.cursor()\n            cur.execute(\"update agents set nom_agent = %s , email_agent = %s , phone_agent = %s , sexe =%s  where id_agent = %s\",(nom,mail,phone,id_agent,sexe, ))",
         "detail": "main",
         "documentation": {}
     },
@@ -200,7 +200,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['titre']\n        nature = request.files['nature_doc']\n        id_agent = session['id_agent'] \n        if nature.filename != '':\n            send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)\n            send_file.save()\n            cur = sql.cursor()\n            cur.execute(\"insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)\",(titre,nature,id_agent,))",
+        "peekOfCode": "def service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['titre']\n        nature = request.files['nature_doc']\n        id_agent = session['id_agent'] \n        if nature.filename != '':\n            send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)\n            nature.save(send_file)\n            cur = sql.cursor()\n            cur.execute(\"insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)\",(titre,nature,id_agent,))",
         "detail": "main",
         "documentation": {}
     },
@@ -254,7 +254,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "@app.route('/modifier_agent/<string:id_agent>',methods = ['GET','POST'])\ndef modifier_agent(id_agent):\n    if 'index_true' in session:\n        if request.method == 'POST':\n            nom         = request.form['nom_agent']\n            mail        = request.form['mail_agent']\n            phone       = str(request.form['phone_agent'])\n            # fonction    = request.form['fonction_agent']\n            cur = sql.cursor()\n            cur.execute(\"update agents set nom_agent = %s , email_agent = %s , phone_agent = %s where id_agent = %s\",(nom,mail,phone,id_agent,))",
+        "peekOfCode": "@app.route('/modifier_agent/<string:id_agent>',methods = ['GET','POST'])\ndef modifier_agent(id_agent):\n    if 'index_true' in session:\n        if request.method == 'POST':\n            nom         = request.form['nom_agent']\n            mail        = request.form['mail_agent']\n            phone       = str(request.form['phone_agent'])\n            sexe       = request.form['phone_agent']\n            # fonction    = request.form['fonction_agent']\n            cur = sql.cursor()",
         "detail": "main",
         "documentation": {}
     }

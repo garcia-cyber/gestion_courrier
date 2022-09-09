@@ -216,7 +216,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def service():\n    if 'index_true' in session :\n       return render_template('email-composercp.html',a = session['index_true'])\n    else:\n        return redirect(url_for('index'))\n@app.route('/service_send_doc',methods=['POST'])\ndef service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['titre']\n        nature = request.files['nature_doc']",
+        "peekOfCode": "def service():\n    if 'index_true' in session :\n       return render_template('email-composercp.html',a = session['index_true'])\n    else:\n        return redirect(url_for('index'))\n@app.route('/service_send_doc',methods=['POST'])\ndef service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['sujet']\n        nature = request.files['file']",
         "detail": "main",
         "documentation": {}
     },
@@ -225,7 +225,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['titre']\n        nature = request.files['nature_doc']\n        id_agent = session['id_agent'] \n        if nature.filename != '':\n            send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)\n            nature.save(send_file)\n            cur = sql.cursor()\n            cur.execute(\"insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)\",(titre,nature,id_agent,))",
+        "peekOfCode": "def service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['sujet']\n        nature = request.files['file']\n        id_agent = session['id_agent'] \n        if nature.filename != '':\n            send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)\n            nature.save(send_file)\n            cur = sql.cursor()\n            cur.execute(\"insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)\",(titre,nature.filename,id_agent,))",
         "detail": "main",
         "documentation": {}
     },
@@ -252,7 +252,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "sql = data.connect(host ='localhost', user = 'lagarxia',password = 'linux',database = 'sania')\napp = Flask(__name__)\napp.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/document'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():",
+        "peekOfCode": "sql = data.connect(host ='localhost', user = 'lagarxia',password = 'linux',database = 'sania')\napp = Flask(__name__)\napp.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/pdf'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():",
         "detail": "main",
         "documentation": {}
     },
@@ -261,7 +261,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "app = Flask(__name__)\napp.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/document'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')",
+        "peekOfCode": "app = Flask(__name__)\napp.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/pdf'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')",
         "detail": "main",
         "documentation": {}
     },
@@ -270,7 +270,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "app.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/document'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])",
+        "peekOfCode": "app.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/pdf'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])",
         "detail": "main",
         "documentation": {}
     },
@@ -279,7 +279,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "app.config['UPLOAD_FOLDER1'] = 'static/document'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])\ndef index_send():",
+        "peekOfCode": "app.config['UPLOAD_FOLDER1'] = 'static/pdf'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])\ndef index_send():",
         "detail": "main",
         "documentation": {}
     },

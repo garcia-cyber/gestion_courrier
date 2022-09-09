@@ -20,7 +20,7 @@ sql = data.connect(host ='localhost', user = 'lagarxia',password = 'linux',datab
 
 app = Flask(__name__)
 app.secret_key = 'stechene '
-app.config['UPLOAD_FOLDER1'] = 'static/document'
+app.config['UPLOAD_FOLDER1'] = 'static/pdf'
 
 
 
@@ -319,15 +319,15 @@ def service():
 @app.route('/service_send_doc',methods=['POST'])
 def service_send_doc():
     if request.method == 'POST':
-        titre = request.form['titre']
-        nature = request.files['nature_doc']
+        titre = request.form['sujet']
+        nature = request.files['file']
         id_agent = session['id_agent'] 
         if nature.filename != '':
             send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)
             nature.save(send_file)
 
             cur = sql.cursor()
-            cur.execute("insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)",(titre,nature,id_agent,))
+            cur.execute("insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)",(titre,nature.filename,id_agent,))
             sql.commit()
             cur.close()
 

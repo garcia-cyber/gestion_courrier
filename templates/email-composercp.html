@@ -22,7 +22,7 @@
 
 </head>
 
-<body >
+<body>
 
     <!--*******************
         Preloader start
@@ -62,7 +62,7 @@
                     <div class="col-lg-12">
                         <div class="card" style="background-color: #ccd2c6;">
                             <div class="card-body">
-                                <h3 class="text-primary">Nouveau message</h3>
+                                <h3 class="text-primary">Enregistrement du document</h3>
                                 <hr style="color: #aaa;">
                                 <div class="email-right-box ms-0 ms-sm-4 ms-sm-0">
                                     <div class="toolbar mb-4" role="toolbar">
@@ -88,26 +88,33 @@
                                         
                                     </div>
                                     <div class="compose-content">
-                                        <form action="#">
+                                        <form action="/service_send_doc" method="post" enctype="multipart/form-data">
                                             <!-- <div class="mb-3">
                                                 <input type="text" class="form-control bg-transparent" placeholder=" A :">
                                             </div> -->
+                                            {% with messages = get_flashed_messages() %}
+                                                {% if messages %}
+                                                    {% for i in messages %}
+                                                        <div class="alert alert-info">{{i}}</div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endwith %}
                                             <div class="mb-2">
-                                                <input type="text" class="form-control bg-transparent" placeholder=" Sujet :">
+                                                <input type="text" required  name="sujet" class="form-control bg-transparent" placeholder=" Sujet :">
                                             </div>
-                                            <div class="mb-3">
+                                            <!-- <div class="mb-3">
                                                 <textarea id="email-compose-editor" class="textarea_editor form-control bg-transparent" rows="15" placeholder="Entrez texte ..."></textarea>
-                                            </div>
+                                            </div> -->
                                             <h5 class="mb-4"><i class="fa fa-paperclip"></i> Attatchez fichier</h5>
                                             <div class="fallback dropzone">
 
-												<input name="file" type="file" multiple="">
+												<input name="file" required type="file" multiple="">
 											</div>
 
                                             <div class="text-start mt-4 mb-3">
-                                                <!-- <input type="submit"> -->
-                                                <button class="btn btn-primary btn-sl-sm me-2" type="button"><span class="me-2"><i class="fa fa-paper-plane"></i></span>Envoyer</button>
-                                                <button class="btn btn-danger light btn-sl-sm" type="reset"><span class="me-2"><i class="fa fa-times"></i></span>Annuler</button>
+                                                <input type="submit" value="Envoyer" class="btn btn-dark btn-sl-sm me-2">
+                                                <!-- <button class="btn btn-dark btn-sl-sm me-2" type="button"><span class="me-2"><i class="fa fa-paper-plane"></i></span>Envoyer</button>
+                                                <button class="btn btn-danger light btn-sl-sm" type="reset"><span class="me-2"><i class="fa fa-times"></i></span>Annuler</button> -->
                                             </div>
 
                                         </form>

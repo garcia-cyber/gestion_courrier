@@ -16,6 +16,14 @@
         "documentation": {}
     },
     {
+        "label": "read_uint1",
+        "importPath": "pickletools",
+        "description": "pickletools",
+        "isExtraImport": true,
+        "detail": "pickletools",
+        "documentation": {}
+    },
+    {
         "label": "render_doc",
         "importPath": "pydoc",
         "description": "pydoc",
@@ -25,6 +33,14 @@
     },
     {
         "label": "S",
+        "importPath": "re",
+        "description": "re",
+        "isExtraImport": true,
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "U",
         "importPath": "re",
         "description": "re",
         "isExtraImport": true,
@@ -178,11 +194,20 @@
         "documentation": {}
     },
     {
+        "label": "drop",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def drop(id_agent):\n    cur = sql.cursor()\n    cur.execute(\"delete from agents where id_agent = %s\",[id_agent])\n    cur.close()\n    return redirect(url_for('admin')) \n#\n#\n# MODIFIER AGENT\n@app.route('/modify_agent/<string:id_agent>',methods = ['GET','POST'])\ndef modifier_agent(id_agent):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
         "label": "modifier_agent",
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def modifier_agent(id_agent):\n    if 'index_true' in session:\n        if request.method == 'POST':\n            nom         = request.form['nom_agent']\n            mail        = request.form['mail_agent']\n            phone       = str(request.form['phone_agent'])\n            sexe       = request.form['phone_agent']\n            # fonction    = request.form['fonction_agent']\n            cur = sql.cursor()\n            cur.execute(\"update agents set nom_agent = %s , email_agent = %s , phone_agent = %s , sexe =%s  where id_agent = %s\",(nom,mail,phone,id_agent,sexe, ))",
+        "peekOfCode": "def modifier_agent(id_agent):\n    if 'index_true' in session:\n        if request.method == 'POST':\n            nom         = request.form['nom_agent']\n            mail        = request.form['mail_agent']\n            phone       = str(request.form['phone_agent'])\n            sexe       = request.form['sexe_agent']\n            # fonction    = request.form['fonction_agent']\n            cur = sql.cursor()\n            cur.execute(\"update agents set nom_agent = %s , email_agent = %s, phone_agent = %s , sexe =%s  where id_agent = %s\",(nom,mail,phone,sexe,id_agent, ))",
         "detail": "main",
         "documentation": {}
     },
@@ -191,7 +216,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def service():\n    if 'index_true' in session :\n        pass \n    else:\n        return redirect(url_for('index'))\n@app.route('/service_send_doc',methods=['POST'])\ndef service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['titre']\n        nature = request.files['nature_doc']",
+        "peekOfCode": "def service():\n    if 'index_true' in session :\n       return render_template('email-composercp.html',a = session['index_true'])\n    else:\n        return redirect(url_for('index'))\n@app.route('/service_send_doc',methods=['POST'])\ndef service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['titre']\n        nature = request.files['nature_doc']",
         "detail": "main",
         "documentation": {}
     },
@@ -201,6 +226,24 @@
         "importPath": "main",
         "description": "main",
         "peekOfCode": "def service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['titre']\n        nature = request.files['nature_doc']\n        id_agent = session['id_agent'] \n        if nature.filename != '':\n            send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)\n            nature.save(send_file)\n            cur = sql.cursor()\n            cur.execute(\"insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)\",(titre,nature,id_agent,))",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "password_modifier",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def password_modifier():\n    if 'index_true' in session:\n        return render_template('password_modier.html',a = session['index_true'])\n    else:\n        return redirect(url_for('index'))\n@app.route('/update_password/<string:id_agent>',methods =['POST','GET'])\ndef update_password(id_agent):\n    if request.method == 'POST':\n        acien = request.form['acien']\n        mdp   = request.form['mdp']",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "update_password",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def update_password(id_agent):\n    if request.method == 'POST':\n        acien = request.form['acien']\n        mdp   = request.form['mdp']\n        conf  = request.form.get('conf')\n        call = session['id_agent'] \n        #verification \n        cur = sql.cursor()\n        cur.execute('select * from agents where  password_agent = %s and id_agent = %s', (acien,id_agent))\n        test_data = cur.fetchone()",
         "detail": "main",
         "documentation": {}
     },
@@ -250,11 +293,20 @@
         "documentation": {}
     },
     {
-        "label": "@app.route('/modifier_agent/<string:id_agent>',methods",
+        "label": "@app.route('/drop/<string:id_agent>',methods",
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "@app.route('/modifier_agent/<string:id_agent>',methods = ['GET','POST'])\ndef modifier_agent(id_agent):\n    if 'index_true' in session:\n        if request.method == 'POST':\n            nom         = request.form['nom_agent']\n            mail        = request.form['mail_agent']\n            phone       = str(request.form['phone_agent'])\n            sexe       = request.form['phone_agent']\n            # fonction    = request.form['fonction_agent']\n            cur = sql.cursor()",
+        "peekOfCode": "@app.route('/drop/<string:id_agent>',methods = ['POST','GET'])\ndef drop(id_agent):\n    cur = sql.cursor()\n    cur.execute(\"delete from agents where id_agent = %s\",[id_agent])\n    cur.close()\n    return redirect(url_for('admin')) \n#\n#\n# MODIFIER AGENT\n@app.route('/modify_agent/<string:id_agent>',methods = ['GET','POST'])",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "@app.route('/modify_agent/<string:id_agent>',methods",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "@app.route('/modify_agent/<string:id_agent>',methods = ['GET','POST'])\ndef modifier_agent(id_agent):\n    if 'index_true' in session:\n        if request.method == 'POST':\n            nom         = request.form['nom_agent']\n            mail        = request.form['mail_agent']\n            phone       = str(request.form['phone_agent'])\n            sexe       = request.form['sexe_agent']\n            # fonction    = request.form['fonction_agent']\n            cur = sql.cursor()",
         "detail": "main",
         "documentation": {}
     }

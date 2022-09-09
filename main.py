@@ -7,8 +7,9 @@
 
 from cgi import test
 from crypt import methods
+from pickletools import read_uint1
 from pydoc import render_doc
-from re import S
+from re import S, U
 from flask import Flask , session, render_template , redirect ,url_for , request , flash
 import mysql.connector as data 
 import os
@@ -60,7 +61,7 @@ def index_send():
             if  session['fonction_agent'] == 1:
                 return redirect(url_for('admin'))
             elif session['fonction_agent'] == 2:
-                return 'service informatique bonjour '
+                return redirect(url_for('service'))
             elif session['fonction_agent'] == 3:
                 return 'bonjour directeur de cabinet'
             elif session['fonction_agent'] == 4:
@@ -218,7 +219,7 @@ def admin_register_agent():
         elif test_phone_existe:
             flash("ce numero existe deja veillez chande de numero")
             return redirect(url_for('ajout')) 
-        elif int(fonction) == 1:
+        elif test_admin_existe:
             flash("pas moyen d'avoir deux administrateur")
             return redirect(url_for('ajout')) 
         elif test_ministre_existe:
@@ -252,23 +253,30 @@ def admin_register_agent():
 ######################################################### SUPPRESSION DES AGENTS
 
 """
+@app.route('/drop/<string:id_agent>',methods = ['POST','GET'])
+def drop(id_agent):
+    cur = sql.cursor()
+    cur.execute("delete from agents where id_agent = %s",[id_agent])
+
+    cur.close()
+    return redirect(url_for('admin')) 
 
                 
 #
 #
 # MODIFIER AGENT
-@app.route('/modifier_agent/<string:id_agent>',methods = ['GET','POST'])
+@app.route('/modify_agent/<string:id_agent>',methods = ['GET','POST'])
 def modifier_agent(id_agent):
     if 'index_true' in session:
         if request.method == 'POST':
             nom         = request.form['nom_agent']
             mail        = request.form['mail_agent']
             phone       = str(request.form['phone_agent'])
-            sexe       = request.form['phone_agent']
+            sexe       = request.form['sexe_agent']
             # fonction    = request.form['fonction_agent']
 
             cur = sql.cursor()
-            cur.execute("update agents set nom_agent = %s , email_agent = %s , phone_agent = %s , sexe =%s  where id_agent = %s",(nom,mail,phone,id_agent,sexe, ))
+            cur.execute("update agents set nom_agent = %s , email_agent = %s, phone_agent = %s , sexe =%s  where id_agent = %s",(nom,mail,phone,sexe,id_agent, ))
             sql.commit()
             cur.close()
             flash("modification reussi")
@@ -278,12 +286,14 @@ def modifier_agent(id_agent):
         
        
 
-
+        fnc = sql.cursor()
+        fnc.execute("select * from fonctions")
+        t = fnc.fetchall()
 
         cur = sql.cursor()
         cur.execute("select * from agents where id_agent = %s" ,[id_agent,])
         test_cur = cur.fetchone()
-        return render_template('modifie_agent.html',a = session['index_true'], data = test_cur)
+        return render_template('modify_agent.html',a = session['index_true'], data = test_cur, dat = t)
     else:
         flash("pas d'autorisation veillez vous connecte ")
         return redirect(url_for('index'))     
@@ -302,7 +312,7 @@ def modifier_agent(id_agent):
 @app.route('/service')
 def service():
     if 'index_true' in session :
-        pass 
+       return render_template('email-composercp.html',a = session['index_true'])
     else:
         return redirect(url_for('index'))
 
@@ -323,10 +333,58 @@ def service_send_doc():
 
             flash('document envoyer avec succes')
             return redirect(url_for('service')) 
-"""
-######################################################### END SERVICE INFORMATIQUE
 
 """
+######################################################### Modifier mot de passe 
+
+"""
+
+@app.route('/password_modifier')
+def password_modifier():
+    if 'index_true' in session:
+      
+
+        return render_template('password_modier.html',a = session['index_true'])
+    else:
+        return redirect(url_for('index'))
+@app.route('/update_password/<string:id_agent>',methods =['POST','GET'])
+def update_password(id_agent):
+    if request.method == 'POST':
+        acien = request.form['acien']
+        mdp   = request.form['mdp']
+        conf  = request.form.get('conf')
+
+        call = session['id_agent'] 
+
+        #verification 
+
+        cur = sql.cursor()
+        cur.execute('select * from agents where  password_agent = %s and id_agent = %s', (acien,id_agent))
+        test_data = cur.fetchone()
+
+        #verification du mot de passe conforme 
+
+        if test_data :
+            if mdp != conf:
+                flash('le mot de passe doit etre conformer')
+                return redirect(url_for('profile'))
+            else:
+                c = sql.cursor()
+                c.execute("update agents set password_agent = %s where id_agent = %s ", (mdp,id_agent,))  
+                sql.commit()
+                c.close()  
+                return redirect(url_for('index'))
+
+            
+        else:
+            flash('ancien mot de passe incorrecte')  
+            return   redirect(url_for('profile'))
+
+    cur = sql.cursor()
+    cur.execute('select * from agents where id_agent = %s',[id_agent,])
+    t_s = cur.fetchone()
+
+    return render_template('password_modier.html',data = t_s)
 
 
 

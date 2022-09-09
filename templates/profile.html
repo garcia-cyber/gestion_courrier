@@ -120,17 +120,19 @@
         <div class="dlabnav">
             <div class="dlabnav-scroll">
                 <ul class="metismenu" id="menu">
-                    <li><a class="" href="/admin" aria-expanded="true">
-                            <i class="fas fa-home"></i>
-                            <span class="nav-text">{{'accueil'.upper()}}</span>
-                        </a>
-                        
-                        
-
-                    </li>
-                    
-                    <hr>
+                   
                     {% if session['fonction_agent'] == 1 %}
+
+                    <li><a class="" href="/admin" aria-expanded="true">
+                        <i class="fas fa-home"></i>
+                        <span class="nav-text">{{'accueil'.upper()}}</span>
+                    </a>
+                    
+                    
+
+                </li>
+                
+                <hr>
                     
                     <li><a class="" href="" aria-expanded="true">
                         <i class="fas fa-user-tie"></i>
@@ -145,8 +147,18 @@
                         </a>
                         
                     </li>
+                    {% elif session['fonction_agent'] == 2 %}
+                    <li><a class="" href="/update_password/{{session['id_agent']}}" aria-expanded="false"> 
+                        <i class="fa fa-user-plus"></i>
+                        <span class="nav-text">Change mot de passe </span>
+                    </a> </li>
+
+                    <li><a class="" href="/" aria-expanded="false">
+                        <i class="fa fa-user-plus"></i>
+                        <span class="nav-text">Change photo </span>
+                    </a> </li>
                     {%else%}
-                    <li><a class="" href="/ajout" aria-expanded="false">
+                    <li><a class="" href="/" aria-expanded="false">
                         <i class="fa fa-user-plus"></i>
                         <span class="nav-text">Send document</span>
                     </a>
@@ -180,10 +192,11 @@
                             <div class="card-header">
                                 <h3 class="page-title">Profil membre</h3>
                                 <div class="btn-group">
-                               
+                               {%if session['fonction_agent'] == 1%}
                                 <a class="btn btn-primary" href = ''>Modifier</a>
                                 <a class="btn btn-info" href = ''>Change Photo</a>
                                 <a class="btn btn-danger" href = ''>Modifier mot de passe</a>
+                                {%endif%}
                                 
                                 <!-- <button class="btn btn-success">Modifier</button>
                                 <button class="btn btn-danger">Supprimer</button> -->
@@ -227,14 +240,14 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="mb-3 row">
+                                                <!-- <div class="mb-3 row">
                                                     <label class="col-lg-4 col-form-label" for="validationCustom08">Sexe
                                                         <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
                                                         <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{session['sexe_agent']}}</div>
                                                     </div>
-                                                </div>
+                                                </div> -->
 
                                                 <div class="mb-3 row">
                                                     <label class="col-lg-4 col-form-label" for="validationCustom08">Date d'enregistrement

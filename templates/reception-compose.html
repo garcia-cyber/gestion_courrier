@@ -15,9 +15,9 @@
 	<title>Admin Dashboard</title>
 	
 	<!-- FAVICONS ICON -->
-	<link rel="shortcut icon" type="image/png" href="images/big-wind.png">
-	<link href="vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
-    <link href="css/style.css?time=<?php echo time(); ?>" rel="stylesheet">
+	<link rel="shortcut icon" type="image/png" href="{{url_for('static',filename ='images/big-wind.png')}}">
+	<link href="{{url_for('static',filename ='vendor/jquery-nice-select/css/nice-select.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename ='css/style.css')}}" rel="stylesheet">
 
 </head>
 
@@ -528,12 +528,13 @@
         Scripts
     ***********************************-->
     <!-- Required vendors -->
-    <script src="vendor/global/global.min.js"></script>
-	<script src="vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
-    <script src="js/custom.min.js"></script>
-	<script src="js/dlabnav-init.js"></script>
-	<script src="js/demo.js"></script>
-    <script src="js/styleSwitcher.js"></script>
+    <script src="{{url_for('static',filename ='vendor/global/global.min.js')}}"></script>
+	<script src="{{url_for('static',filename ='vendor/jquery-nice-select/js/jquery.nice-select.min.js')}}"></script>
+    <script src="{{url_for('static',filename ='js/custom.min.js')}}"></script>
+	<script src="{{url_for('static',filename ='js/dlabnav-init.js')}}"></script>
+	<script src="{{url_for('static',filename ='js/demo.js')}}"></script>
+    <script src="{{url_for('static',filename ='js/styleSwitcher.js')}}"></script>
+    
 	
 </body>
 </html>

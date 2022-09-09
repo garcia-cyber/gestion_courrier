@@ -61,3 +61,6 @@ create table if not exists documents(
     constraint fk_doc foreign key(fk_agent) references agents(id_agent) on delete set null on update cascade,
     constraint pk_doc primary key(id_doc)
 );
+
+-- update agents
+alter table agents add statut longtext 

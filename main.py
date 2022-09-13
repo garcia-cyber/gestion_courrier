@@ -13,6 +13,7 @@ from re import S, U
 from flask import Flask , session, render_template , redirect ,url_for , request , flash
 import mysql.connector as data 
 import os
+# from main import app.config['UPLOAD_FOLDER1']
 
 
 sql = data.connect(host ='localhost', user = 'lagarxia',password = 'linux',database = 'sania')
@@ -20,7 +21,7 @@ sql = data.connect(host ='localhost', user = 'lagarxia',password = 'linux',datab
 
 app = Flask(__name__)
 app.secret_key = 'stechene '
-app.config['UPLOAD_FOLDER1'] = 'static/pdf'
+app.config['UPLOAD_FOLDER1'] = "static/pdf"
 
 
 
@@ -60,12 +61,12 @@ def index_send():
 
             if  session['fonction_agent'] == 1:
                 return redirect(url_for('admin'))
-            elif session['fonction_agent'] == 2:
+            elif session['fonction_agent'] == 2 or session['fonction_agent'] == 6:
                 return redirect(url_for('service'))
             elif session['fonction_agent'] == 3:
-                return 'bonjour directeur de cabinet'
+                return redirect(url_for('dircab')) 
             elif session['fonction_agent'] == 4:
-                return 'mr le ministre '    
+                return redirect(url_for('dircab'))  
             elif session['fonction_agent'] == 5:
                 return 'bonjour conseiller'
             else:
@@ -234,8 +235,8 @@ def admin_register_agent():
             cur.execute("insert into agents(nom_agent,email_agent,phone_agent,fk_fonction , sexe)values(%s,%s,%s,%s,%s)",(nom,mail,phone,fonction,sexe,))
             sql.commit()
             cur.close()
-            if int(fonction) == 2:
-                flash("enregistrement de l'agent du service informatique reussi") 
+            if int(fonction) == 2 or int(fonction) == 6:
+                flash("enregistrement de l'agent  reussi") 
                 return redirect(url_for('ajout'))
             elif int(fonction) == 3:
                 flash("enregistrement du dircab reussi") 
@@ -273,6 +274,7 @@ def modifier_agent(id_agent):
             mail        = request.form['mail_agent']
             phone       = str(request.form['phone_agent'])
             sexe       = request.form['sexe_agent']
+            
             # fonction    = request.form['fonction_agent']
 
             cur = sql.cursor()
@@ -312,27 +314,54 @@ def modifier_agent(id_agent):
 @app.route('/service')
 def service():
     if 'index_true' in session :
-       return render_template('email-composercp.html',a = session['index_true'])
+        return render_template('menu.html',a = session['index_true'])
+        
+    #    return render_template('email-composercp.html',a = session['index_true'])
     else:
         return redirect(url_for('index'))
 
-@app.route('/service_send_doc',methods=['POST'])
+"""
+######################################################### MESSAGE SECRETARIAT
+
+"""        
+@app.route('/secretaire')
+def secretaire():
+    if 'index_true' in session :
+    
+        
+        return render_template('email-composercp.html',a = session['index_true'])
+    else:
+        return redirect(url_for('index'))        
+
+@app.route('/service_send_doc',methods=['POST', 'GET'])
 def service_send_doc():
     if request.method == 'POST':
         titre = request.form['sujet']
         nature = request.files['file']
         id_agent = session['id_agent'] 
+        fonction = session['fonction_agent']
+
         if nature.filename != '':
             send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)
             nature.save(send_file)
 
-            cur = sql.cursor()
-            cur.execute("insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)",(titre,nature.filename,id_agent,))
-            sql.commit()
-            cur.close()
+            #verification du documment existant 
+            doc = sql.cursor()
+            doc.execute('select * from documents where nature_document = %s',(nature.filename,))
+            test_doc = doc.fetchone()
 
-            flash('document envoyer avec succes')
-            return redirect(url_for('service')) 
+            if test_doc:
+                flash('document deja enregistre au server ')
+                return redirect(url_for('secretaire')) 
+            else:    
+
+                cur = sql.cursor()
+                cur.execute("insert into documents(titre_document,nature_document,fk_agent,fk_fonction)values(%s,%s,%s,%s)",(titre,nature.filename,id_agent,fonction,))
+                sql.commit()
+                cur.close()
+
+                flash('document envoyer avec succes')
+                return redirect(url_for('secretaire')) 
 
 """
 ######################################################### Modifier mot de passe 
@@ -362,7 +391,7 @@ def update_password(id_agent):
         cur.execute('select * from agents where  password_agent = %s and id_agent = %s', (acien,id_agent))
         test_data = cur.fetchone()
 
-        #verification du mot de passe conforme 
+        #verification du mot de passe conforme
 
         if test_data :
             if mdp != conf:
@@ -385,6 +414,108 @@ def update_password(id_agent):
     t_s = cur.fetchone()
 
     return render_template('password_modier.html',data = t_s)
+
+"""
+######################################################### Menue ministre et dircab
+
+"""
+
+@app.route('/dircab')
+def dircab():
+    if 'index_true' in session:
+        return render_template('email-compose.html', a = session['index_true'])
+    else:
+        return redirect(url_for('index'))   
+
+
+"""
+######################################################### NOUVEAU MESSAGE 
+
+"""
+
+@app.route('/message')
+def message():
+    if 'index_true' in session:
+        #affiche les message du secretariat
+        msg = sql.cursor()
+        msg.execute('select titre_document,nature_document ,date_entre , nom_agent, libelle_fonction from documents inner join agents on documents.fk_agent = agents.id_agent inner join fonctions on documents.fk_fonction = fonctions.id_fonction order by date_entre desc')
+        test_doc = msg.fetchall()
+
+        return render_template('drcbcompose.html', a = session['index_true'],message = test_doc)
+    else:
+        return redirect(url_for('index')) 
+
+"""
+######################################################### NOUVEAU MESSAGE 
+
+"""
+
+@app.route('/traite')
+def traite():
+    if 'index_true' in session:
+        #affiche les message du secretariat
+        msg = sql.cursor()
+        msg.execute('select objet,pdf,date_sortie,heure_sortie,nom_agent,libelle_fonction from traitements inner join agents on traitements.fk_try_agent = agents.id_agent inner join fonctions on traitements.fk_try_fonction = fonctions.id_fonction order by date_sortie desc')
+        test_doc = msg.fetchall()
+
+        return render_template('drcb_traite.html', a = session['index_true'],message = test_doc)
+    else:
+        return redirect(url_for('index'))         
+
+
+"""
+######################################################### TRAITEMENT DU DOCUMENT  
+"""
+@app.route('/try_send',methods=['POST','GET'])
+def try_send():
+
+    if request.method == 'POST':
+        objet   = request.form.get('objet')
+        file    = request.files['file']
+        agent   = session['id_agent']
+        fonction = session['fonction_agent']
+
+        if file.filename != '':
+
+            upload_file = os.path.join(app.config['UPLOAD_FOLDER1'],file.filename)
+           
+            file.save(upload_file)
+
+            #verification du fichier traite
+            ver = sql.cursor()
+            ver.execute('select * from traitements where pdf = %s',(file.filename,))
+            test_ver = ver.fetchone()
+
+            if test_ver:
+                flash("ce fichier est deja traite ")
+                return redirect(url_for('dircab'))
+            else:
+                cur = sql.cursor()
+                cur.execute("insert into traitements(objet,pdf,fk_try_agent,fk_try_fonction)values(%s,%s,%s,%s)",(objet,file.filename,agent,fonction,))
+                sql.commit()
+                cur.close()
+                sql.close()
+                flash('Envoie reussi')
+                return redirect(url_for('dircab'))
+                
+"""
+######################################################### Modification de photo 
+"""
+@app.route('/photo/')
+def photo():
+    if 'index_true' in session:
+        return render_template('') 
+    else:
+        return redirect(url_for('index'))
+
+            
+
+# @app.route('/boite')
+# def boite():
+#     if 'index_true' in session:
+#         return render_template('email-compose.html', a = session['index_true'])
+#     else:
+#         return redirect(url_for('index')) 
 
 
 

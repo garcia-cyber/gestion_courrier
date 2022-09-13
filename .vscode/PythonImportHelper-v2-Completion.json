@@ -216,7 +216,16 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def service():\n    if 'index_true' in session :\n       return render_template('email-composercp.html',a = session['index_true'])\n    else:\n        return redirect(url_for('index'))\n@app.route('/service_send_doc',methods=['POST'])\ndef service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['sujet']\n        nature = request.files['file']",
+        "peekOfCode": "def service():\n    if 'index_true' in session :\n        return render_template('menu.html',a = session['index_true'])\n    #    return render_template('email-composercp.html',a = session['index_true'])\n    else:\n        return redirect(url_for('index'))\n\"\"\"\n######################################################### MESSAGE SECRETARIAT\n\"\"\"        \n@app.route('/secretaire')",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "secretaire",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def secretaire():\n    if 'index_true' in session :\n        return render_template('email-composercp.html',a = session['index_true'])\n    else:\n        return redirect(url_for('index'))        \n@app.route('/service_send_doc',methods=['POST', 'GET'])\ndef service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['sujet']\n        nature = request.files['file']",
         "detail": "main",
         "documentation": {}
     },
@@ -225,7 +234,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['sujet']\n        nature = request.files['file']\n        id_agent = session['id_agent'] \n        if nature.filename != '':\n            send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)\n            nature.save(send_file)\n            cur = sql.cursor()\n            cur.execute(\"insert into documents(titre_document,nature_document,fk_agent)values(%s,%s,%s)\",(titre,nature.filename,id_agent,))",
+        "peekOfCode": "def service_send_doc():\n    if request.method == 'POST':\n        titre = request.form['sujet']\n        nature = request.files['file']\n        id_agent = session['id_agent'] \n        fonction = session['fonction_agent']\n        if nature.filename != '':\n            send_file = os.path.join(app.config['UPLOAD_FOLDER1'],nature.filename)\n            nature.save(send_file)\n            #verification du documment existant ",
         "detail": "main",
         "documentation": {}
     },
@@ -248,11 +257,56 @@
         "documentation": {}
     },
     {
+        "label": "dircab",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def dircab():\n    if 'index_true' in session:\n        return render_template('email-compose.html', a = session['index_true'])\n    else:\n        return redirect(url_for('index'))   \n\"\"\"\n######################################################### NOUVEAU MESSAGE \n\"\"\"\n@app.route('/message')\ndef message():",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "message",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def message():\n    if 'index_true' in session:\n        #affiche les message du secretariat\n        msg = sql.cursor()\n        msg.execute('select titre_document,nature_document ,date_entre , nom_agent, libelle_fonction from documents inner join agents on documents.fk_agent = agents.id_agent inner join fonctions on documents.fk_fonction = fonctions.id_fonction order by date_entre desc')\n        test_doc = msg.fetchall()\n        return render_template('drcbcompose.html', a = session['index_true'],message = test_doc)\n    else:\n        return redirect(url_for('index')) \n\"\"\"",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "traite",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def traite():\n    if 'index_true' in session:\n        #affiche les message du secretariat\n        msg = sql.cursor()\n        msg.execute('select objet,pdf,date_sortie,heure_sortie,nom_agent,libelle_fonction from traitements inner join agents on traitements.fk_try_agent = agents.id_agent inner join fonctions on traitements.fk_try_fonction = fonctions.id_fonction order by date_sortie desc')\n        test_doc = msg.fetchall()\n        return render_template('drcb_traite.html', a = session['index_true'],message = test_doc)\n    else:\n        return redirect(url_for('index'))         \n\"\"\"",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "try_send",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def try_send():\n    if request.method == 'POST':\n        objet   = request.form.get('objet')\n        file    = request.files['file']\n        agent   = session['id_agent']\n        fonction = session['fonction_agent']\n        if file.filename != '':\n            upload_file = os.path.join(app.config['UPLOAD_FOLDER1'],file.filename)\n            file.save(upload_file)\n            #verification du fichier traite",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "photo",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def photo():\n    if 'index_true' in session:\n        return render_template('') \n    else:\n        return redirect(url_for('index'))\n# @app.route('/boite')\n# def boite():\n#     if 'index_true' in session:\n#         return render_template('email-compose.html', a = session['index_true'])\n#     else:",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
         "label": "sql",
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "sql = data.connect(host ='localhost', user = 'lagarxia',password = 'linux',database = 'sania')\napp = Flask(__name__)\napp.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/pdf'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():",
+        "peekOfCode": "sql = data.connect(host ='localhost', user = 'lagarxia',password = 'linux',database = 'sania')\napp = Flask(__name__)\napp.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = \"static/pdf\"\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():",
         "detail": "main",
         "documentation": {}
     },
@@ -261,7 +315,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "app = Flask(__name__)\napp.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/pdf'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')",
+        "peekOfCode": "app = Flask(__name__)\napp.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = \"static/pdf\"\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')",
         "detail": "main",
         "documentation": {}
     },
@@ -270,7 +324,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "app.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = 'static/pdf'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])",
+        "peekOfCode": "app.secret_key = 'stechene '\napp.config['UPLOAD_FOLDER1'] = \"static/pdf\"\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])",
         "detail": "main",
         "documentation": {}
     },
@@ -279,7 +333,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "app.config['UPLOAD_FOLDER1'] = 'static/pdf'\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])\ndef index_send():",
+        "peekOfCode": "app.config['UPLOAD_FOLDER1'] = \"static/pdf\"\n\"\"\"\n######################################################### START index AND TRY SEND\n\"\"\"\n@app.route('/')\n@app.route('/index')\ndef index():\n    return  render_template('index.html')\n@app.route('/index_send',methods = ['POST'])\ndef index_send():",
         "detail": "main",
         "documentation": {}
     },

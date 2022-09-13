@@ -58,7 +58,7 @@
                     </defs>
                 </svg>
                 <div class="brand-title">
-                    <h2 class="">{{session['nom_agent']}}</h2>
+                    <!-- <h2 class="">{{session['nom_agent']}}</h2> -->
                     
                 </div>
             </a>
@@ -148,15 +148,37 @@
                         
                     </li>
                     {% elif session['fonction_agent'] == 2 %}
+                        <li><a class="" href="/update_password/{{session['id_agent']}}" aria-expanded="false"> 
+                            <i class="fa fa-user-plus"></i>
+                            <span class="nav-text">Change mot de passe </span>
+                        </a> </li>
+
+                        <li><a class="" href="/" aria-expanded="false">
+                            <i class="fa fa-user-plus"></i>
+                            <span class="nav-text">Change photo </span>
+                        </a> </li>
+
+                    {%elif session['fonction_agent'] == 3 %}    
+                        <li><a class="" href="/update_password/{{session['id_agent']}}" aria-expanded="false"> 
+                            <i class="fa fa-user-plus"></i>
+                            <span class="nav-text">Change mot de passe </span>
+                        </a>    </li>
+
+                        <li><a class="" href="/" aria-expanded="false">
+                            <i class="fa fa-user-plus"></i>
+                            <span class="nav-text">Change photo </span>
+                        </a> </li>
+                    {%elif session['fonction_agent'] == 4 %}  
                     <li><a class="" href="/update_password/{{session['id_agent']}}" aria-expanded="false"> 
                         <i class="fa fa-user-plus"></i>
                         <span class="nav-text">Change mot de passe </span>
-                    </a> </li>
+                    </a>    </li>
 
                     <li><a class="" href="/" aria-expanded="false">
                         <i class="fa fa-user-plus"></i>
                         <span class="nav-text">Change photo </span>
-                    </a> </li>
+                    </a> </li>   
+
                     {%else%}
                     <li><a class="" href="/" aria-expanded="false">
                         <i class="fa fa-user-plus"></i>

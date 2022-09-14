@@ -40,12 +40,13 @@ alter table agents modify dateEnregistrement date default current_date();
  -- Non ajouter
 
 alter table agents add sexe varchar(10);
+alter table agents add statut longtext;
 
 
 update agents set sexe = 'Masculin' ;
 
 -- information par defaut
-insert into agents(nom_agent,email_agent,phone_agent,fk_fonction,password_agent) values('admin','admin@gmail.com','0995540211',1,'admin');
+insert into agents(nom_agent,email_agent,phone_agent,fk_fonction,password_agent,sexe) values('admin','admin@gmail.com','0995540211',1,'admin','Masculin');
 -- requetes
 
 select id_agent , nom_agent , email_agent , phone_agent , libelle_fonction , password_agent from agents inner join fonctions on agents.fk_fonction = fonctions.id_fonction ;
@@ -56,11 +57,16 @@ create table if not exists documents(
     id_doc smallint auto_increment not null ,
     titre_document varchar(150),
     nature_document longtext ,
-    date_entre datetime default now(),
+    date_entre date default current_date() ,
+    heure_entre time default current_time(),
+    fk_fonction tinyint,
     fk_agent  mediumint ,
     constraint fk_doc foreign key(fk_agent) references agents(id_agent) on delete set null on update cascade,
+    constraint fk_foc foreign key(fk_fonction) references fonctions(id_fonction) on delete set null on update cascade,
     constraint pk_doc primary key(id_doc)
 );
+
+
 
 -- update agents
 alter table agents add statut longtext 
@@ -80,6 +86,37 @@ create table traitements(
     constraint pk_try primary key(id_traitement)
 
 );
+-- ajout du champs 
+alter table traitements add descriptions longtext;
+-- message 
+
+create table if not exists chats(
+    id_chat bigint auto_increment primary key,
+    objet_chat text ,
+    expediteur  mediumint ,
+    destinataire mediumint ,
+    message longtext,
+    file_chat longtext,
+    fonction tinyint ,
+    constraint fk_exp foreign key(expediteur) references agents(id_agent) on delete set null on update cascade,
+    constraint fk_dest foreign key(destinataire) references agents(id_agent) on delete set null on update cascade,
+    constraint fk_fnc foreign key(fonction) references fonctions(id_fonction) on delete set null on update cascade
+
+);
+
+
+
+-- ajout du secretaire dircab et mise en jour du service informatique en secretariat
+
+insert into fonctions(libelle_fonction) values('secretaire dircab');   
+update fonctions set libelle_fonction = 'secretariat General' where id_fonction = 2;
+
+
+
+
+
+
+
 
 
 Database changed
@@ -132,7 +169,7 @@ MariaDB [sania]> desc documents;
 | date_entre      | datetime     | YES  |     | current_timestamp() |                |
 | fk_agent        | mediumint(9) | YES  | MUL | NULL                |                |
 +-----------------+--------------+------+-----+---------------------+----------------+
-5 rows in set (0.002 sec)
+5 rows in set (0.002 sec) 
 
 MariaDB [sania]> desc fonctions;
 +------------------+-------------+------+-----+---------+----------------+

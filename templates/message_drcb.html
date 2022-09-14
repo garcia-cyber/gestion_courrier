@@ -1,0 +1,97 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Google Font Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}" />
+    <link rel="shortcut icon" type="image/png" href="{{url_for('static',filename='images/big-wind.png')}}">
+	<link href="{{url_for('static',filename='vendor/jquery-nice-select/css/nice-select.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='vendor/datatables/css/jquery.dataTables.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='css/styles.css')}}" rel="stylesheet">
+    <title>Final - Gmail Clone</title>
+  </head>
+  <body>
+    <!-- Header Starts -->
+    <div class="header">
+      <div class="header__left">
+        <span class="material-icons"> menu </span>
+        <img
+          src="{{url_for('static',filename='images/big-wind.png')}}"
+          alt=""
+        />
+      </div>
+
+    
+    </div>
+    <!-- Header Ends -->
+
+    <!-- Main Body Starts -->
+    <div class="main__body">
+      <!-- Sidebar Starts -->
+    
+      <!-- Sidebar Ends -->
+
+      <!-- Email List Starts -->
+      <div class="emailList">
+        <!-- Settings Starts -->
+       
+        <!-- Settings Ends -->
+
+        <!-- Section Starts -->
+        <div class="emailList__sections">
+         
+
+          <div class="section">
+           
+            <h4>OBject</h4>
+          </div>
+
+          <div class="section">
+          
+            <h4>Descriptions</h4>
+          </div>
+        </div>
+        <!-- Section Ends -->
+
+        <!-- Email List rows starts -->
+        {%for i in message %}
+        <div class="emailList__list">
+          <!-- Email Row Starts -->
+          <div class="emailRow">
+            <div class="emailRow__options">
+              <input type="checkbox" name="" id="" />
+              
+              <span class="material-icons">{{i[0]}} </span>
+            </div> 
+
+            <h3 class="emailRow__title l-3">{{i[6]}}</h3>
+
+            <div class="emailRow__message">
+             <a href="" class="btn btn-info">clock</a>
+            </div>
+
+            <p class="emailRow__time">10pm</p>
+          </div>
+          <!-- Email Row Ends -->
+
+       
+    
+
+
+         
+      
+
+    
+
+          <!-- Email Row Ends -->
+        </div>
+        {%endfor%}
+        <!-- Email List rows Ends -->
+      </div>
+      <!-- Email List Ends -->
+    </div>
+    <!-- Main Body Ends -->
+  </body>
+</html>

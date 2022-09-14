@@ -4,7 +4,6 @@
 # 
 # 
 #                                       call bibliotheque 
-
 from cgi import test
 from crypt import methods
 from pickletools import read_uint1
@@ -139,6 +138,7 @@ def ajout():
 @app.route('/admin')
 def admin():
     if 'index_true' in session:
+        id = session['id_agent']
         #liste de fonction 
         # 
         # 
@@ -153,7 +153,15 @@ def admin():
         agent = sql.cursor()
         agent.execute('select id_agent,nom_agent ,email_agent,phone_agent,libelle_fonction ,dateEnregistrement,sexe from agents inner join fonctions on agents.fk_fonction = fonctions.id_fonction ')
         tAg = agent.fetchall()
-        return render_template('admin.html', a = session['index_true'],aff_fonction = test_fontion, aff_agent = tAg)
+
+        ###
+        ###
+        ###
+        ### message envoyees
+        send = sql.cursor()
+        send.execute('select id_doc , titre_document,nature_document,date_entre ,heure_entre from documents where fk_agent = %s',(id,))
+        test_send = send.fetchall()
+        return render_template('admin.html', a = session['index_true'],aff_fonction = test_fontion, aff_agent = tAg, sg = test_send)
     else:
         return redirect(url_for('index'))
 
@@ -194,15 +202,15 @@ def admin_register_agent():
         #
         #
         admin_existe = sql.cursor()
-        admin_existe.execute("select count(*) from agents group by fk_fonction having fk_fonction = 1 and count(*) > 1")
-        test_admin_existe = admin_existe.fetchone()
+        admin_existe.execute("select * from agents where fk_fonction = %s and fk_fonction = 1 ",(fonction,)) 
+        test_admin_existe = admin_existe.fetchone() 
 
         #verification ministre existe deja 
         #
         #
         #
         ministre_existe = sql.cursor()
-        ministre_existe.execute("select count(*) from agents group by fk_fonction having fk_fonction = 4 and count(*) > 1")
+        ministre_existe.execute("select * from agents where fk_fonction = %s and fk_fonction = 4 ",(fonction,))
         test_ministre_existe = ministre_existe.fetchone()
 
         #verification dircab existe
@@ -210,7 +218,7 @@ def admin_register_agent():
         #
         #
         dircab_existe = sql.cursor()
-        dircab_existe.execute("select count(*) from agents group by fk_fonction having fk_fonction = 3 and count(*) > 1")
+        dircab_existe.execute("select * from agents where fk_fonction = %s and fk_fonction = 3 ",(fonction,))
         test_dircab_existe = dircab_existe.fetchone()
 
 
@@ -226,6 +234,9 @@ def admin_register_agent():
         elif test_ministre_existe:
             flash("pas moyen d'avoir deux ministre dans le systeme")
             return redirect(url_for('ajout'))  
+        elif len(phone) < 10:
+            flash("le numero de telephone doit avoir 10 chiffres")
+            return redirect(url_for('ajout'))      
         elif test_dircab_existe:
             flash("pas moyen d'avoir deux directeur de cabinet dans le systeme")
             return redirect(url_for('ajout')) 
@@ -244,7 +255,7 @@ def admin_register_agent():
             elif int(fonction) == 4:
                 flash("enregistrement du ministre reussi") 
                 return redirect(url_for('ajout'))  
-            else:
+            elif int(fonction) == 5:
                 flash("enregistrement du conseiller reussi") 
                 return redirect(url_for('ajout'))  
 
@@ -257,8 +268,8 @@ def admin_register_agent():
 @app.route('/drop/<string:id_agent>',methods = ['POST','GET'])
 def drop(id_agent):
     cur = sql.cursor()
-    cur.execute("delete from agents where id_agent = %s",[id_agent])
-
+    cur.execute("delete from agents where id_agent = %s ",[id_agent,])
+    sql.commit()
     cur.close()
     return redirect(url_for('admin')) 
 
@@ -281,7 +292,7 @@ def modifier_agent(id_agent):
             cur.execute("update agents set nom_agent = %s , email_agent = %s, phone_agent = %s , sexe =%s  where id_agent = %s",(nom,mail,phone,sexe,id_agent, ))
             sql.commit()
             cur.close()
-            flash("modification reussi")
+            # flash("modification reussi")
 
             return redirect(url_for('admin'))
    
@@ -438,7 +449,7 @@ def message():
     if 'index_true' in session:
         #affiche les message du secretariat
         msg = sql.cursor()
-        msg.execute('select titre_document,nature_document ,date_entre , nom_agent, libelle_fonction from documents inner join agents on documents.fk_agent = agents.id_agent inner join fonctions on documents.fk_fonction = fonctions.id_fonction order by date_entre desc')
+        msg.execute('select titre_document,nature_document ,date_entre,heure_entre , nom_agent, libelle_fonction from documents inner join agents on documents.fk_agent = agents.id_agent inner join fonctions on documents.fk_fonction = fonctions.id_fonction order by date_entre desc')
         test_doc = msg.fetchall()
 
         return render_template('drcbcompose.html', a = session['index_true'],message = test_doc)
@@ -455,7 +466,7 @@ def traite():
     if 'index_true' in session:
         #affiche les message du secretariat
         msg = sql.cursor()
-        msg.execute('select objet,pdf,date_sortie,heure_sortie,nom_agent,libelle_fonction from traitements inner join agents on traitements.fk_try_agent = agents.id_agent inner join fonctions on traitements.fk_try_fonction = fonctions.id_fonction order by date_sortie desc')
+        msg.execute('select objet,pdf,date_sortie,heure_sortie,nom_agent,libelle_fonction , descriptions from traitements inner join agents on traitements.fk_try_agent = agents.id_agent inner join fonctions on traitements.fk_try_fonction = fonctions.id_fonction order by date_sortie desc')
         test_doc = msg.fetchall()
 
         return render_template('drcb_traite.html', a = session['index_true'],message = test_doc)
@@ -473,7 +484,8 @@ def try_send():
         objet   = request.form.get('objet')
         file    = request.files['file']
         agent   = session['id_agent']
-        fonction = session['fonction_agent']
+        fonction = session['fonction_agent'] 
+        desc    = request.form['desc']
 
         if file.filename != '':
 
@@ -491,7 +503,7 @@ def try_send():
                 return redirect(url_for('dircab'))
             else:
                 cur = sql.cursor()
-                cur.execute("insert into traitements(objet,pdf,fk_try_agent,fk_try_fonction)values(%s,%s,%s,%s)",(objet,file.filename,agent,fonction,))
+                cur.execute("insert into traitements(objet,pdf,fk_try_agent,fk_try_fonction,descriptions)values(%s,%s,%s,%s,%s)",(objet,file.filename,agent,fonction,desc,))
                 sql.commit()
                 cur.close()
                 sql.close()
@@ -507,6 +519,19 @@ def photo():
         return render_template('') 
     else:
         return redirect(url_for('index'))
+"""
+######################################################### Modification de photo 
+"""
+@app.route('/message_document')
+def message_document():
+    if 'index_true' in session:
+        msg = sql.cursor()
+        msg.execute('select objet , pdf ,date_sortie,heure_sortie,nom_agent,libelle_fonction , descriptions from traitements inner join agents on traitements.fk_try_agent = agents.id_agent inner join fonctions on traitements.fk_try_fonction = fonctions.id_fonction order by date_sortie desc')
+        test_doc = msg.fetchall()
+      
+        return render_template('email-inbox.html',v = session['index_true'],message = test_doc)  
+    else:
+        return redirect(url_for('index'))        
 
             
 
@@ -517,6 +542,10 @@ def photo():
 #     else:
 #         return redirect(url_for('index')) 
 
+"""
+######################################################### NOUVE
+
+"""
 
 
 

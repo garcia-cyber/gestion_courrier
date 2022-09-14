@@ -19,6 +19,12 @@
 		<title>{{'Direcab'}}</title>
 	{% elif session['fonction_agent'] == 4%}
 		<title>{{' | ministre'.upper()}}</title>
+    {% elif session['fonction_agent'] == 2 %}
+		<title>{{' | sg'.upper()}}</title>
+    {% elif session['fonction_agent'] == 6%}
+		<title>{{' | sd'.upper()}}</title> 
+    {% elif session['fonction_agent'] == 1%}
+		<title>{{' | Admin'.upper()}}</title>       
 	{%else%}
 		<title>{{'Conseille'}}</title>	
 

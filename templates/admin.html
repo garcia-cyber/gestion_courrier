@@ -12,7 +12,11 @@
 	<meta name="format-detection" content="telephone=no">
 	
 	<!-- PAGE TITLE HERE -->
-	<title>{{'| Admin'}}</title>
+    {%if session['fonction_agent'] == 1%}
+	    <title>{{'| Admin'}}</title>
+    {%elif session['fonction_agent'] == 2 %}
+        <title>{{'sg'.upper()}}</title>    
+    {% endif %}    
 	
 	<!-- FAVICONS ICON -->
 	<link rel="shortcut icon" type="image/png" href="{{url_for('static',filename='images/big-wind.png')}}">
@@ -115,6 +119,7 @@
         ***********************************-->
         <div class="dlabnav">
             <div class="dlabnav-scroll">
+                {%if session['fonction_agent'] == 1 %}
                 <ul class="metismenu" id="menu">
                     
                     <li><a class="" href="#" aria-expanded="true">
@@ -141,9 +146,64 @@
                         </a>
                         
                     </li>
+                <!-- GESTION DE LA MESSAGERIE  -->
+                <li><a class="" href="" aria-expanded="false">
+                    <i class="fa fa-paper-plane"></i>
+                    <span class="nav-text">Envoyés</span>
+                </a>
+                
+            </li>
                     
                     
                 </ul>
+                {%elif session['fonction_agent'] == 2 %}
+                <ul class="metismenu" id="menu">
+                    <li><a class="" href="/service" aria-expanded="true">
+							<i class="fas fa-home"></i>
+							<span class="nav-text">Gestion</span>
+						</a>
+						
+                        
+
+                    </li>
+                 
+                    <hr>
+					
+               
+				
+                    <li> <a class="" href="/secretaire" aria-expanded="false">
+							<i class="fa fa-paper-plane"></i>
+							<span class="nav-text">Envoyés Doc</span>
+						</a>
+                        
+                    </li>
+
+					<li> <a class="" href="/message_document" aria-expanded="false">
+						<i class="fa fa-paper-plane"></i>
+						<span class="nav-text">Messages</span>
+					</a>
+					
+				</li>
+
+					<!-- <hr>
+					<li> <a class="" href="" aria-expanded="false">
+						<i class="fa fa-paper-plane"></i>
+						<span class="nav-text">Messages</span>
+					</a>
+					
+				</li> -->
+
+				<hr>
+				<li> <a class="" href="/admin" aria-expanded="false">
+					<i class="fa fa-paper-plane"></i>
+					<span class="nav-text">Liste des Documents</span>
+				</a>
+				
+			</li>
+                    
+                    
+                </ul>
+                {% endif %}
                 
             </div>
         </div>
@@ -163,11 +223,19 @@
                     
                     <div class="col-12">
                         <div class="card">
+                            {%if session['fonction_agent']==1 %}
                             <div class="card-header">
                                 <h3 class="text-primary" style="text-transform: normal;">Liste membre</h3>
                             </div>
+                            {% elif session['fonction_agent']== 2 %}
+                            <div class="card-header">
+                                <h3 class="text-primary" style="text-transform: normal;">Message Envoyés</h3>
+                            </div>
+
+                            {%endif%}
                             <div class="card-body">
                                 <div class="table-responsive">
+                                    {%if session['fonction_agent'] == 1 %}
                                     <table class="table table-responsive-md" id="example4">
                                         <thead>
                                             <tr>
@@ -205,6 +273,44 @@
                                             {% endfor %}
                                        </tbody>
                                     </table>
+                                    {%elif session['fonction_agent'] == 2 %}
+                                    <table class="table table-responsive-md" id="example4">
+                                        <thead>
+                                            <tr>
+                                                <!-- <th style="width:40px;"><strong>N°</strong></th>
+                                                <th></th> -->
+                                                <th>Numero</th>
+                                                <th>Sujet</th>
+                                               
+                                                <th>Date d'envoies</th>
+                                                <th>Heure d'envoies</th>
+                                              
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                       <tbody>
+                                            {% for i in sg  %}
+                                                <tr>
+                                                    <!-- <td>{{i[0]}}</td> -->
+                                                    <td>{{i[0]}}</td>
+                                                    <td>{{i[1]}}</td>
+                                                    <td>{{i[3]}}</td>
+                                                    <td>{{i[4]}}</td>
+                                                 
+                                                    <td>
+                                                        <div class="d-flex">
+                                                            <a href="static/pdf/{{i[2]}}" class="btn btn-primary shadow ">afficher</a>
+                                                           
+                                                           
+                                                        </div>
+                                                        <!-- <a href="" class="btn btn-info" >Modifier</a>
+                                                        <a href="" class="btn btn-danger" >Supprimer</a> -->
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                       </tbody>
+                                    </table>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

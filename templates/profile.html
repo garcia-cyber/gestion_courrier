@@ -134,20 +134,27 @@
                 
                 <hr>
                     
-                    <li><a class="" href="" aria-expanded="true">
+                    <li><a class="" href="/admin" aria-expanded="true">
                         <i class="fas fa-user-tie"></i>
                             <span class="nav-text">Liste membre <div style="position: relative;display: inline-block;color: red;">nombre</div></span>
                         </a>
                         
                     </li>
                     
-                    <li><a class="" href="/ajout" aria-expanded="false">
+                    
+                    <li><a class="" href="/ajout" aria-expanded="false" target="_blank">
                             <i class="fa fa-user-plus"></i>
                             <span class="nav-text">Ajouter membre</span>
                         </a>
                         
                     </li>
                     {% elif session['fonction_agent'] == 2 %}
+                    <li><a class="" href="/service" aria-expanded="true">
+                        <i class="fas fa-home"></i>
+                        <span class="nav-text">Gestion</span>
+                    </a>  
+
+                </li>
                         <li><a class="" href="/update_password/{{session['id_agent']}}" aria-expanded="false"> 
                             <i class="fa fa-user-plus"></i>
                             <span class="nav-text">Change mot de passe </span>
@@ -180,6 +187,7 @@
                     </a> </li>   
 
                     {%else%}
+                  
                     <li><a class="" href="/" aria-expanded="false">
                         <i class="fa fa-user-plus"></i>
                         <span class="nav-text">Send document</span>
@@ -217,7 +225,7 @@
                                {%if session['fonction_agent'] == 1%}
                                 <a class="btn btn-primary" href = ''>Modifier</a>
                                 <a class="btn btn-info" href = ''>Change Photo</a>
-                                <a class="btn btn-danger" href = ''>Modifier mot de passe</a>
+                                <a class="btn btn-danger" href = '/update_password/{{session['id_agent']}}'>Modifier mot de passe</a>
                                 {%endif%}
                                 
                                 <!-- <button class="btn btn-success">Modifier</button>

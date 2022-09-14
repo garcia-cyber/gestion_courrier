@@ -93,6 +93,7 @@
                                             <!-- <div class="mb-3">
                                                 <input type="text" class="form-control bg-transparent" placeholder=" A :">
                                             </div> -->
+                                            
                                             {% with messages = get_flashed_messages() %}
                                                 {% if messages %}
                                                     {% for i in messages %}
@@ -100,6 +101,7 @@
                                                     {% endfor %}
                                                 {% endif %}
                                             {% endwith %}
+
                                             <div class="mb-2">
                                                 <input type="text" required  name="sujet" class="form-control bg-transparent" placeholder=" Sujet :">
                                             </div>

@@ -195,6 +195,7 @@
                         <ul aria-expanded="false">
                             <li><a href="/profile">Profile</a></li>
 							<li><a href="/update_password/{{session['id_agent']}}">Change Mot de passe</a></li>
+                            <li><a href="/chat">Chat</a></li>
 						
                           
                         </ul>
@@ -207,15 +208,10 @@
 							<span class="nav-text">Boite de reception</span>
 						</a>
                         <ul aria-expanded="false">
-							{%if session['fonction_agent'] == 3 %}
+							
                             	<li><a href="/message">{{'courriers Entree'.title() }}</a></li>
                             	<li><a href="/traite">{{'courriers traitee'.title()}}</a></li>
 								<li><a href="">{{'Courriers Approuve'.title()}}</a></li>
-							{%elif session['fonction_agent'] == 4%}
-								<li><a href="/traite">{{'courriers traitee'.title()}}</a></li>
-								<li><a href="">{{'Courriers Approuve'.title()}}</a></li>
-
-							{%endif%}
 							
                         </ul>
                     </li>
@@ -238,6 +234,22 @@
 							
                         </ul>
                     </li>
+                    {% elif session['fonction_agent'] == 5 %}
+
+                    <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
+                        <i class="fas fa-table"></i>
+                        <span class="nav-text">Boite de reception</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        
+                        
+                            <li><a href="/traite">{{'courriers traitee'.title()}}</a></li>
+                           
+
+                    
+                        
+                    </ul>
+                </li>
 					{%endif%}
 					
                 

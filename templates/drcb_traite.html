@@ -63,7 +63,13 @@
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="text-primary">Message Traitee</h3>
-                                <a href="/dircab" class="btn btn-dark">accueil</a>
+                                {%if session['fonction_agent'] == 1%}
+                                    <a href="/admin" class="btn btn-dark">accueil</a>
+
+                                {%else%}
+                                    <a href="/dircab" class="btn btn-dark">accueil</a>
+
+                                {%endif%}
                                 <hr style="color: #aaa;">
                                 <table class="table  table-striped table-hover ">
                                     <thead class="bg-dark">

@@ -21,6 +21,7 @@ sql = data.connect(host ='localhost', user = 'lagarxia',password = 'linux',datab
 app = Flask(__name__)
 app.secret_key = 'stechene '
 app.config['UPLOAD_FOLDER1'] = "static/pdf"
+app.config['UPLOAD_FOLDER2'] = "static/photo"
 
 
 
@@ -57,6 +58,7 @@ def index_send():
             session['password_agent']   = test_cur[5]
             session['date_agent']       = test_cur[6]
             session['sexe_agent']       = test_cur[7]
+            session['photo_agent']      = test_cur[8] 
 
             if  session['fonction_agent'] == 1:
                 return redirect(url_for('admin'))
@@ -67,7 +69,7 @@ def index_send():
             elif session['fonction_agent'] == 4:
                 return redirect(url_for('dircab'))  
             elif session['fonction_agent'] == 5:
-                return 'bonjour conseiller'
+                return redirect(url_for('dircab')) 
             else:
                 return 'inviter'
         else:
@@ -513,10 +515,25 @@ def try_send():
 """
 ######################################################### Modification de photo 
 """
-@app.route('/photo/')
-def photo():
+@app.route('/photo/<string:id_agent>',methods = ['POST','GET'])
+def photo(id_agent):
     if 'index_true' in session:
-        return render_template('') 
+        if request.method == 'POST':
+            photo = request.files['photo']
+
+            if photo.filename != '':
+                send_photo = os.path.join(app.config['UPLOAD_FOLDER2'],photo.filename)
+                photo.save(send_photo)
+                cur = sql.cursor()
+                cur.execute('update agents set statut = %s where id_agent = %s ', (photo.filename,id_agent,))
+                sql.commit()
+                cur.close()
+                flash("mise en jour de la photo reussi ".upper())
+
+        cur = sql.cursor()
+        cur.execute('select * from agents where id_agent = %s',[id_agent,])
+        tst_statut = cur.fetchone()
+        return render_template('photo.html',photo = tst_statut) 
     else:
         return redirect(url_for('index'))
 """
@@ -526,7 +543,7 @@ def photo():
 def message_document():
     if 'index_true' in session:
         msg = sql.cursor()
-        msg.execute('select objet , pdf ,date_sortie,heure_sortie,nom_agent,libelle_fonction , descriptions from traitements inner join agents on traitements.fk_try_agent = agents.id_agent inner join fonctions on traitements.fk_try_fonction = fonctions.id_fonction order by date_sortie desc')
+        msg.execute('select id_traitement ,objet , pdf ,date_sortie,heure_sortie,nom_agent,libelle_fonction , descriptions from traitements inner join agents on traitements.fk_try_agent = agents.id_agent inner join fonctions on traitements.fk_try_fonction = fonctions.id_fonction order by heure_sortie desc ')
         test_doc = msg.fetchall()
       
         return render_template('email-inbox.html',v = session['index_true'],message = test_doc)  
@@ -543,9 +560,52 @@ def message_document():
 #         return redirect(url_for('index')) 
 
 """
-######################################################### NOUVE
+######################################################### transfer
 
 """
+@app.route('/transfert/<string:id_traitement>',methods = ['POST','GET'])
+def transfert(id_traitement):
+    if 'index_true' in session:
+        cur = sql.cursor()
+        cur.execute('select * from traitements where id_traitement = %s', [id_traitement,]) 
+        test = cur.fetchone()
+
+        return render_template('transfert.html', a = session['index_true'], dat =  test)
+    else:
+        return redirect(url_for('index'))
+
+"""
+######################################################### Chat
+
+"""
+@app.route('/chat')
+def chat(): 
+    if 'index_true' in session:
+       
+        choose =  sql.cursor()
+        choose.execute('select * from agents ')
+        try_choose = choose.fetchall()
+        return render_template('chat.html', a = session['index_true'], dat =  try_choose)
+    else:
+        return redirect(url_for('index')) 
+
+"""
+######################################################### boite de messagerie
+
+"""
+@app.route('/boite')
+def boite(): 
+    if 'index_true' in session:
+       
+        choose =  sql.cursor()
+        choose.execute('select * from agents ')
+        try_choose = choose.fetchall()
+        return render_template('messages.html', a = session['index_true'], dat =  try_choose)
+    else:
+        return redirect(url_for('index')) 
+
+
+
 
 
 

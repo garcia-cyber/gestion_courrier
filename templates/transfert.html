@@ -185,7 +185,7 @@
         <div class="dlabnav">
             <div class="dlabnav-scroll">
 				<ul class="metismenu" id="menu">
-                    <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
+                    <li><a class="has-arrow " href="/service" aria-expanded="false">
 							<i class="fas fa-home"></i>
 							<span class="nav-text">Accueil</span>
 						</a>
@@ -213,15 +213,11 @@
 							<span class="nav-text">Boite de reception</span>
 						</a>
                         <ul aria-expanded="false">
-							{%if session['fonction_agent'] == 3 %}
+							
                             	<li><a href="/message">{{'courriers Entree'.title() }}</a></li>
                             	<li><a href="/traite">{{'courriers traitee'.title()}}</a></li>
 								<li><a href="">{{'Courriers Approuve'.title()}}</a></li>
-							{%elif session['fonction_agent'] == 4%}
-								<li><a href="/traite">{{'courriers traitee'.title()}}</a></li>
-								<li><a href="">{{'Courriers Approuve'.title()}}</a></li>
-
-							{%endif%}
+	
 							
                         </ul>
                     </li>
@@ -258,7 +254,7 @@
         <!--**********************************
             Content body start
         ***********************************-->
-		{% if session['fonction_agent'] == 3 %}
+		{% if session['fonction_agent'] == 2 %}
         <div class="content-body">
             <div class="container-fluid">
 				
@@ -294,15 +290,18 @@
 
                                             </div> 
                                             <div class="mb-3">
-                                                <input type="text" class="form-control bg-transparent" required name="objet" placeholder=" Subject:">
+                                                <input type="text" class="form-control bg-transparent" required name="objet" value="{{dat[1]}}">
                                             </div>
+                                           
                                             <div class="mb-3">
-                                                <textarea id="email-compose-editor" name="desc" class="textarea_editor form-control bg-transparent" rows="15" placeholder="Enter text ..."></textarea>
+                                                <textarea rows="10" id="email-compose-editor" name="desc" class="textarea_editor form-control bg-transparent" >
+                                                    {{dat[7]}}
+                                                </textarea>
                                             </div>
 
 											<h5 class="mb-4"><i class="fa fa-paperclip"></i> Attatchment</h5>
 											<div class="fallback dropzone">
-												<input name="file" required type="file" multiple="">
+												<input name="file" required type="file" value="{{dat[2]}}" multiple="">
 											</div>
 
 											<div class="text-start mt-4 mb-3">

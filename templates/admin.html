@@ -122,54 +122,12 @@
         <div class="dlabnav">
             <div class="dlabnav-scroll">
                 {%if session['fonction_agent'] == 1 %}
-                <ul class="metismenu" id="menu">
-                    
-                    <li><a class="" href="#" aria-expanded="true">
-                            <i class="fas fa-home"></i>
-                            <span class="nav-text">Gestion</span>
-                        </a>
-                        
-                        
-
-                    </li>
-                    
-                    <hr>
-                    
-                    <li><a class="" href="" aria-expanded="true">
-                        <i class="fas fa-user-tie"></i>
-                            <span class="nav-text">Liste membre <div style="position: relative;display: inline-block;color: red;"></div></span>
-                        </a>
-                        
-                    </li>
-                    
-                    <li><a class="" href="/ajout" target="_blank" aria-expanded="false">
-                            <i class="fa fa-user-plus"></i>
-                            <span class="nav-text">Ajouter membre</span>
-                        </a>
-                        
-                    </li>
-                <!-- GESTION DE LA MESSAGERIE  -->
-                <li>    
-                    <a class="" href="/chat" aria-expanded="false">
-                        <i class="fa fa-paper-plane"></i>
-                        <span class="nav-text">Envoyés</span>
-                    </a>
-                </li>
-
-                <li>    
-                    <a class="" href="/traite" aria-expanded="false">
-                        <i class="fa fa-paper-plane"></i>
-                        <span class="nav-text">Document traitee</span>
-                    </a>
-                </li>
-                    
-                    
-                </ul>
+                    {% include '_call/admin_menu.html'%}
                 {%elif session['fonction_agent'] == 2 %}
                 <ul class="metismenu" id="menu">
                     <li><a class="" href="/service" aria-expanded="true">
 							<i class="fas fa-home"></i>
-							<span class="nav-text">Gestion</span>
+							<span class="nav-text">Accueil</span>
 						</a>
 						
                         
@@ -179,36 +137,10 @@
                     <hr>
 					
                
-				
-                    <li> <a class="" href="/secretaire" aria-expanded="false">
-							<i class="fa fa-paper-plane"></i>
-							<span class="nav-text">Envoyés Doc</span>
-						</a>
-                        
-                    </li>
+			
 
-					<li> <a class="" href="/message_document" aria-expanded="false">
-						<i class="fa fa-paper-plane"></i>
-						<span class="nav-text">Messages</span>
-					</a>
-					
-				</li>
 
-					<!-- <hr>
-					<li> <a class="" href="" aria-expanded="false">
-						<i class="fa fa-paper-plane"></i>
-						<span class="nav-text">Messages</span>
-					</a>
-					
-				</li> -->
-
-				<hr>
-				<li> <a class="" href="/admin" aria-expanded="false">
-					<i class="fa fa-paper-plane"></i>
-					<span class="nav-text">Liste des Documents</span>
-				</a>
-				
-			</li>
+			
                     
                     
                 </ul>

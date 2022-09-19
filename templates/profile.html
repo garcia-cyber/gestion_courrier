@@ -120,100 +120,16 @@
         ***********************************-->
         <div class="dlabnav">
             <div class="dlabnav-scroll">
-                <ul class="metismenu" id="menu">
+               
                    
                     {% if session['fonction_agent'] == 1 %}
 
-                    <li><a class="" href="/admin" aria-expanded="true">
-                        <i class="fas fa-home"></i>
-                        <span class="nav-text">{{'accueil'.upper()}}</span>
-                        </a>
-                    
-                    
-
-                    </li>
-                
-                    <hr>
-                    
-                        <li><a class="" href="/admin" aria-expanded="true">
-                            <i class="fas fa-user-tie"></i>
-                            <span class="nav-text">Liste membre <div style="position: relative;display: inline-block;color: red;">nombre</div></span>
-                             </a>
-                        
-                        </li>
-                    
-                    
-                        <li><a class="" href="/ajout" aria-expanded="false" target="_blank">
-                            <i class="fa fa-user-plus"></i>
-                            <span class="nav-text">Ajouter membre</span>
-                            </a>
-                        
-                     </li>
-                    {% elif session['fonction_agent'] == 2 %}
-                    <li><a class="" href="/service" aria-expanded="true">
-                        <i class="fas fa-home"></i>
-                        <span class="nav-text">Gestion</span>
-                    </a>  
-
-                </li>
-                        <li><a class="" href="/update_password/{{session['id_agent']}}" aria-expanded="false"> 
-                            <i class="fa fa-user-plus"></i>
-                            <span class="nav-text">Change mot de passe </span>
-                        </a> </li>
-
-                        <li><a class="" href="/photo/{{session['id_agent']}}" aria-expanded="false">
-                            <i class="fa fa-user-plus"></i>
-                            <span class="nav-text">Change photo </span>
-                        </a> </li>
-
-                    {%elif session['fonction_agent'] == 3 %}    
-
-                        <li><a class="" href="/update_password/{{session['id_agent']}}" aria-expanded="false"> 
-                            <i class="fa fa-user-plus"></i>
-                            <span class="nav-text">Change mot de passe </span>
-                        </a>    </li>
-
-                        <li><a class="" href="/photo/{{session['id_agent']}}" aria-expanded="false">
-                            <i class="fa fa-user-plus"></i>
-                            <span class="nav-text">Change photo </span>
-                        </a> </li>
-
-                    {%elif session['fonction_agent'] == 4 %}  
-                    <li><a class="" href="/dircab" aria-expanded="true">
-                        <i class="fas fa-home"></i>
-                        <span class="nav-text">Gestion</span>
-                    </a>  
-
-                    </li>
-                    
-                    <li><a class="" href="/update_password/{{session['id_agent']}}" aria-expanded="false"> 
-                        <i class="fa fa-user-plus"></i>
-                        <span class="nav-text">Change mot de passe </span>
-                        </a>    
-                    </li>
-
-                    <li><a class="" href="/photo/{{session['id_agent']}}" aria-expanded="false">
-                        <i class="fa fa-user-plus"></i>
-                        <span class="nav-text">Change photo </span>
-                    </a> </li>   
-
-
-                    {%else%}
-                    <li><a class="" href="/update_password/{{session['id_agent']}}" aria-expanded="false"> 
-                        <i class="fa fa-user-plus"></i>
-                        <span class="nav-text">Change mot de passe </span>
-                    </a>    </li>
-
-                    <li><a class="" href="/photo/{{session['id_agent']}}" aria-expanded="false">
-                        <i class="fa fa-user-plus"></i>
-                        <span class="nav-text">Change photo </span>
-                    </a> </li> 
-                    {%endif%}
+                        {% include '_call/admin_menu.html'%}
                     
                    
+                    {%endif%}
                     
-                    
-                </ul>
+           
                 
             </div>
         </div>
@@ -253,7 +169,7 @@
                                             <div class="col-xl-6">
                                                 
                                                
-                                                <img src="static/photo/{{session['photo_agent']}}" width="400" height="250" class="img-fluid" style="border-radius: 10px;">
+                                                <img src="static/photo/{{session['photo_agent']}}" width="400" height="100" class="img-fluid" style="border-radius: 10px;">
                                             </div>
                                             <div class="col-xl-6">
                                                 <h3 class="page-title">Informations personnelles</h3>
@@ -283,6 +199,28 @@
                                                         <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{session['phone_agent']}}</div>
                                                     </div>
                                                 </div>
+
+                                                <div class="mb-3 row">
+                                                    <label class="col-lg-4 col-form-label" for="validationCustom08">Fonction 
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-6">
+                                                        {%if session['fonction_agent'] == 1 %}
+                                                            <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{'admin'.title()}}</div>
+                                                        {% elif session['fonction_agent'] == 2 %}  
+                                                            <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{'Secretaire generale'.title()}}</div>     
+                                                        {% elif session['fonction_agent'] == 3 %}  
+                                                            <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{'dircab'.title()}}</di>
+                                                        {% elif session['fonction_agent'] == 4 %}  
+                                                                <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{'ministre'.title()}}</di>    
+                                                        {% elif session['fonction_agent'] == 5 %}  
+                                                                <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{'conseiller'.title()}}</di>
+                                                        {% else %}       
+                                                            <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{'secretaite dircab'.title()}}</di>                      
+
+                                                        {%endif%}
+                                                    </div>
+                                                </div> 
 
                                                 <br clear="both">
 

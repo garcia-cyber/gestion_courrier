@@ -35,7 +35,7 @@
                     <div class="authincation-content" >
                         <div class="row no-gutters">
                             <div class="col-xl-12">
-                                <div class="auth-form" style="background-color: #111;">
+                                <div class="auth-form" >
 									<div class="text-center mb-3">
 										<a href="/photo"><img src="{{url_for('static',filename = 'images/big-wind.png')}}" alt=""></a>
 									</div>
@@ -50,11 +50,11 @@
                                         {% endwith %}
                                         <div class="mb-3">
                                             <label><strong>Statut</strong></label>
-                                            <input type="file" name="photo" class="form-control" placeholder="Veillez inserrez une photo " style="background-color: #000;padding: 8px 8px;">
+                                            <input type="file" name="photo" class="form-control" required placeholder="Veillez inserrez une photo ">
                                         </div>
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-primary btn-block bg-dark">valider</button>
-                                            <a href="http://sodecom24.com/webmail">mail</a>
+                                          
                                         </div>
                                     </form>
                                 </div>

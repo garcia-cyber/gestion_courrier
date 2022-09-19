@@ -13,9 +13,9 @@
 		<title>Direcab</title>
 	{% elif session['fonction_agent'] == 2%}
 
-		<title>Secretariat</title>
+		<title>Secretariat | G</title>
 	{% elif session['fonction_agent'] == 6 %}	
-		<title>Secretariat</title>	
+		<title>Secretariat D</title>	
 	{% elif session['fonction_agent'] == 5 %}	
 		<title>Conseiller</title>
 	{% else %}	
@@ -37,7 +37,7 @@
 					</defs>
 				</svg>
 				<div class="brand-title">
-					<h2 class="">{{session['nom_agent']}}</h2>
+					<h2 class=""></h2>
 					<span class="brand-sub-title">{{session['email_agent']}}</span>
 				</div>
             </a>
@@ -132,17 +132,32 @@
 				
                     <li> <a class="" href="/secretaire" aria-expanded="false">
 							<i class="fa fa-paper-plane"></i>
-							<span class="nav-text">Envoyés Doc</span>
+							<span class="nav-text">Expedie Document</span>
 						</a>
                         
-                    </li>
+                    </li> <hr>
 
-					<li> <a class="" href="/message_document" aria-expanded="false">
-						<i class="fa fa-paper-plane"></i>
-						<span class="nav-text">Messages</span>
+					<li> <a class="" href="/doc" aria-expanded="false">
+						<i class="fa fa-comment-alt"></i>
+						<span class="nav-text">{{'document traitee'.title()}}</span>
 					</a>
 					
 				</li>
+
+				<hr>
+				<li> <a class="" href="/chat" aria-expanded="false">
+					<i class="fas fa-spinner fa-spin"></i>
+					<span class="nav-text">Chat</span>
+				</a>
+				
+			</li>
+<hr>
+			<li> <a class="" href="/boite" aria-expanded="false">
+				<i class="fas fa-envelope-open"></i>
+				<span class="nav-text">Boite de reception</span>
+			</a>
+			
+		</li>
 
 					<!-- <hr>
 					<li> <a class="" href="" aria-expanded="false">
@@ -154,7 +169,7 @@
 
 				<hr>
 				<li> <a class="" href="/admin" aria-expanded="false">
-					<i class="fa fa-paper-plane"></i>
+					<i class="fa fa-envelope-square"></i>
 					<span class="nav-text">Liste des Documents</span>
 				</a>
 				

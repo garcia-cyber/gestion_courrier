@@ -4,6 +4,7 @@
 # 
 # 
 #                                       call bibliotheque 
+from ast import JoinedStr
 from cgi import test
 from crypt import methods
 from pickletools import read_uint1
@@ -12,7 +13,9 @@ from re import S, U
 from flask import Flask , session, render_template , redirect ,url_for , request , flash
 import mysql.connector as data 
 import os
+from flask_socketio import send 
 # from main import app.config['UPLOAD_FOLDER1']
+
 
 
 sql = data.connect(host ='localhost', user = 'lagarxia',password = 'linux',database = 'sania')
@@ -22,6 +25,14 @@ app = Flask(__name__)
 app.secret_key = 'stechene '
 app.config['UPLOAD_FOLDER1'] = "static/pdf"
 app.config['UPLOAD_FOLDER2'] = "static/photo"
+app.config['UPLOAD_FOLDER3'] = "static/msg"
+app.config['UPLOAD_FOLDER4'] = "static/doc"
+
+
+#systeme de mail
+# 
+# 
+#  
 
 
 
@@ -63,7 +74,7 @@ def index_send():
             if  session['fonction_agent'] == 1:
                 return redirect(url_for('admin'))
             elif session['fonction_agent'] == 2 or session['fonction_agent'] == 6:
-                return redirect(url_for('service'))
+                return redirect(url_for('boite'))
             elif session['fonction_agent'] == 3:
                 return redirect(url_for('dircab')) 
             elif session['fonction_agent'] == 4:
@@ -109,8 +120,10 @@ def profile():
 
     if 'index_true' in session:
         
-
-        return render_template('profile.html', a = session['index_true'])
+        cur = sql.cursor()
+        cur.execute('select id_agent , nom_agent,email_agent,phone_agent,libelle_fonction,dateEnregistrement,sexe from agents inner join fonctions on agents.fk_fonction = fonctions.id_fonction')
+        test = cur.fetchall()
+        return render_template('profile.html', a = session['index_true'],data = test)
     else:
         return  redirect(url_for('index')) 
 
@@ -375,6 +388,9 @@ def service_send_doc():
 
                 flash('document envoyer avec succes')
                 return redirect(url_for('secretaire')) 
+        else:
+            flash('veillez insserre le document')
+            return redirect(url_for('secretaire'))        
 
 """
 ######################################################### Modifier mot de passe 
@@ -468,10 +484,10 @@ def traite():
     if 'index_true' in session:
         #affiche les message du secretariat
         msg = sql.cursor()
-        msg.execute('select objet,pdf,date_sortie,heure_sortie,nom_agent,libelle_fonction , descriptions from traitements inner join agents on traitements.fk_try_agent = agents.id_agent inner join fonctions on traitements.fk_try_fonction = fonctions.id_fonction order by date_sortie desc')
+        msg.execute('select * from traitements order by heure_sortie desc ')
         test_doc = msg.fetchall()
 
-        return render_template('drcb_traite.html', a = session['index_true'],message = test_doc)
+        return render_template('drcb_traite.html', a = session['index_true'],message = test_doc) 
     else:
         return redirect(url_for('index'))         
 
@@ -488,6 +504,8 @@ def try_send():
         agent   = session['id_agent']
         fonction = session['fonction_agent'] 
         desc    = request.form['desc']
+        
+
 
         if file.filename != '':
 
@@ -511,6 +529,9 @@ def try_send():
                 sql.close()
                 flash('Envoie reussi')
                 return redirect(url_for('dircab'))
+        else:
+            flash('veillez inssere le document')
+            return redirect(url_for('traite'))        
                 
 """
 ######################################################### Modification de photo 
@@ -528,7 +549,8 @@ def photo(id_agent):
                 cur.execute('update agents set statut = %s where id_agent = %s ', (photo.filename,id_agent,))
                 sql.commit()
                 cur.close()
-                flash("mise en jour de la photo reussi ".upper())
+                return redirect(url_for('index'))
+               
 
         cur = sql.cursor()
         cur.execute('select * from agents where id_agent = %s',[id_agent,])
@@ -588,6 +610,29 @@ def chat():
         return render_template('chat.html', a = session['index_true'], dat =  try_choose)
     else:
         return redirect(url_for('index')) 
+@app.route('/chat_send',methods = ['POST','GET'])
+def chat_send():
+    if request.method == 'POST':
+        destinataire        = request.form['choix']
+        sujet               = request.form['sujet']
+        contenue            = request.form['contenue']
+        # jointe              = request.files['file']
+        expediteur          = session['id_agent']   
+        fonction            = session['fonction_agent']
+
+       
+
+        cur = sql.cursor()
+        cur.execute('INSERT INTO chats(objet_chat,expediteur,destinataire,message,fonction)values(%s,%s,%s,%s,%s)',(sujet,expediteur,destinataire,contenue,fonction,))
+        sql.commit()
+        cur.close()
+        flash('message expediee')
+        return redirect(url_for('chat'))
+
+        
+       
+
+
 
 """
 ######################################################### boite de messagerie
@@ -600,15 +645,73 @@ def boite():
         choose =  sql.cursor()
         choose.execute('select * from agents ')
         try_choose = choose.fetchall()
-        return render_template('messages.html', a = session['index_true'], dat =  try_choose)
+
+        #
+        #
+        #affichage des messages 
+        a = session['id_agent']
+        b = session['fonction_agent']
+        msg = sql.cursor()
+        msg.execute('select * from chats where destinataire = %s  order by heure desc ',(a,))
+        te = msg.fetchall()
+
+        return render_template('messages.html', a = session['index_true'], dat =  try_choose,mes = te)
     else:
         return redirect(url_for('index')) 
 
 
+"""
+#########################################################APPROUVE DEOCUMENT , SUPPRESSION DU DOCUMMENT ET AFFICHAGE DU DOCUMENT
+
+"""
+@app.route('/approuve',methods =['POST','GET'])
+def approuve(): 
+    if 'index_true' in session:
+        if request.method == 'POST':
+            sujet = request.form['sujet']
+            descr = request.form['texte']
+            doc   = request.files['file']
+
+            if doc.filename  != '':
+
+                fi = os.path.join(app.config['UPLOAD_FOLDER4'],doc.filename) 
+
+                doc.save(fi)
+
+                cur = sql.cursor()
+                cur.execute("insert into approuves(sujet,descrip,doc)values(%s,%s,%s)",(sujet,descr,doc.filename,))
+                sql.commit()
+                cur.close()
+                flash("document envoyee")
+                return redirect(url_for('dircab'))
+            else:
+                flash("veillez inserre le document")
+                return redirect(url_for('dircab'))
+
+                    
+    else:
+        return redirect(url_for('index'))    
+
+@app.route('/doc')
+def doc():
+    if 'index_true' in session:
+        #affiche les message du secretariat
+        msg = sql.cursor()
+        msg.execute('select * from approuves order by temps desc ')
+        test_doc = msg.fetchall()
+
+        return render_template('drcb_doc.html', a = session['index_true'],message = test_doc) 
+    else:
+        return redirect(url_for('index'))   
 
 
-
-
+@app.route('/delete/<string:id_approuve>',methods = ['POST','GET'])
+def delete(id_approuve):
+    cur= sql.cursor()
+    cur.execute('delete from approuves where id_approuve = %s ' ,[id_approuve,])
+    sql.commit()
+    cur.close()
+    return redirect(url_for('doc'))
 
 
 

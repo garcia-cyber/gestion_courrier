@@ -12,7 +12,7 @@
 	<meta name="format-detection" content="telephone=no">
 	
 	<!-- PAGE TITLE HERE -->
-	<title>{{'Message | traitee'.title()}}</title>
+	<title>{{'Doc | traitee'.title()}}</title>
 	
 	<!-- FAVICONS ICON -->
 	<link rel="shortcut icon" type="image/png" href="{{url_for('static',filename='images/big-wind.png')}}">
@@ -65,6 +65,8 @@
                                 <h3 class="text-primary">Message Traitee</h3>
                                 {%if session['fonction_agent'] == 1%}
                                     <a href="/admin" class="btn btn-dark">accueil</a>
+                                {% elif session['fonction_agent'] == 2 %}
+                                    <a href="/service" class="btn btn-dark">accueil</a>    
 
                                 {%else%}
                                     <a href="/dircab" class="btn btn-dark">accueil</a>
@@ -87,14 +89,14 @@
                                   <tbody>
                                    {%for i in message %}
                                     <tr>
-                                        <td>{{i[0].title()}}</td>
-                                        <td>{{i[2]}}</td>
+                                        <td>{{i[1]}}</td>
                                         <td>{{i[3]}}</td>
+                                        <td>{{i[4]}}</td>
                                         <!-- <td>{{i[4]}}</td>
                                         <td>{{i[5]}}</td> -->
-                                        <td>{{i[6]}}</td>
+                                        <td>{{i[7]}}</td>
                                         <td>
-                                            <a href="static/pdf/{{i[1]}}" target="_blank"  class="btn btn-dark">Afficher</a>
+                                            <a href="static/pdf/{{i[2]}}" target="_blank"  class="btn btn-dark">Afficher</a>
                                         </td>
                                     </tr>
                                    {% endfor %}

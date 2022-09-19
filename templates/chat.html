@@ -152,7 +152,7 @@
 							
 							<li class="nav-item dropdown  header-profile">
 								<a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
-									<img src="{{url_for('static',filename='images/big-wind.png')}}" width="56" alt="">
+									<img src="static/photo/{{session['photo_agent']}}" width="56" alt="">
 								</a>
 								<div class="dropdown-menu dropdown-menu-end">
 									<a href="/profile" class="dropdown-item ai-icon">
@@ -184,53 +184,25 @@
         ***********************************-->
         <div class="dlabnav">
             <div class="dlabnav-scroll">
-				<ul class="metismenu" id="menu">
-                    {%if session['fonction_agent'] == 2%}
-                    <li><a class="has-arrow " href="/service" aria-expanded="false">
-							<i class="fas fa-home"></i>
-							<span class="nav-text">Accueil</span>
-						</a>
+				
                     
+                    {% if session['fonction_agent'] == 1%}
 
-                    </li>
-					
-                    <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
-						<i class="fas fa-info-circle"></i>
-							<span class="nav-text">Autres</span>
-						</a>
-						
-                        <ul aria-expanded="false">
-                            <li><a href="/boite">Boite de messagerie</a></li>
-							
-						
-                          
-                        </ul>
-                    </li>
-                    {%elif session['fonction_agent'] == 6 %}
-                    <li><a class="has-arrow " href="/service" aria-expanded="false">
-                        <i class="fas fa-home"></i>
-                        <span class="nav-text">Accueil</span>
-                    </a>
-                
-
-                </li>
-                
-                <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
-                    <i class="fas fa-info-circle"></i>
-                        <span class="nav-text">Autres</span>
-                    </a>
-                    
-                    <ul aria-expanded="false">
-                        <li><a href="/boite">Boite de messagerie</a></li>
-                        
-                    
-                      
-                    </ul>
-                </li>
-                    {% elif session['fonction_agent'] == 1%}
+                            {% include '_call/admin_menu.html'%}
+                    {% elif session['fonction_agent'] ==  2 %}
 
                     <li>
-                        <a class="has-arrow " href="/admin" aria-expanded="false">
+                        <a class="has-arrow " href="/service" aria-expanded="false">
+                        <i class="fas fa-home"></i>
+                        <span class="nav-text">Accueil</span>
+                        </a>
+                
+
+                    </li>
+                    {% elif session['fonction_agent'] ==  5 %}
+
+                    <li>
+                        <a class="has-arrow " href="/dircab" aria-expanded="false">
                         <i class="fas fa-home"></i>
                         <span class="nav-text">Accueil</span>
                         </a>
@@ -270,27 +242,37 @@
                                 <div class="email-right-box ms-0 ms-sm-4 ms-sm-0">
                                  
                                     <div class="compose-content">
-                                        <form action="#" class="">
+                                        <form action="/chat_send" class="" method="post" enctype="multipart/form-data">
+                                            {% with messages = get_flashed_messages() %}
+                                                {% if messages %}
+                                                    {% for i in messages %}
+                                                        <div class="alert alert-info">{{i}}</div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endwith %}
                                             <div class="mb-3">
-                                                <select name="" id=""  class="form-control bg-transparent" >
-													<option value="">choix du destinataire</option>
+                                                <select name="choix" id=""  class="form-control " >
+                                                    {%for i in dat %}
+													    <option value="{{i[0]}}">{{i[1]}}</option>
+                                                    {% endfor %}    
 												</select>
                                             </div> 
+
                                             <div class="mb-3">
-                                                <input type="text" class="form-control bg-transparent" required placeholder=" Subject:">
+                                                <input type="text" name="sujet" class="form-control bg-transparent" required placeholder=" Subject:">
                                             </div>
                                             <div class="mb-3">
-                                                <textarea id="email-compose-editor" required class="textarea_editor form-control bg-transparent" rows="15" placeholder="Enter text ..."></textarea>
+                                                <textarea id="email-compose-editor" name="contenue" required class="textarea_editor form-control bg-transparent" rows="15" placeholder="Enter text ..."></textarea>
                                             </div>
 
-											<h5 class="mb-4"><i class="fa fa-paperclip"></i> Attatchment</h5>
+											<!-- <h5 class="mb-4"><i class="fa fa-paperclip"></i> Attatchment</h5>
 											<div class="fallback dropzone">
-												<input name="file" type="file" multiple="">
-											</div>
+												<input name="file" type="file" multiple="" >
+											</div> -->
 
 											<div class="text-start mt-4 mb-3">
-												<button class="btn btn-primary btn-sl-sm me-2" type="button"><span class="me-2"><i class="fa fa-paper-plane"></i></span>Send</button>
-												<button class="btn btn-danger light btn-sl-sm" type="button"><span class="me-2"><i class="fa fa-times"></i></span>Discard</button>
+												<button class="btn btn-primary btn-sl-sm me-2" type="submit"><span class="me-2"><i class="fa fa-paper-plane"></i></span>Send</button>
+												<button class="btn btn-danger light btn-sl-sm" type="reset"><span class="me-2"><i class="fa fa-times"></i></span>Discard</button>
 											</div>
 
                                         </form>
@@ -313,11 +295,7 @@
         <!--**********************************
             Footer start
         ***********************************-->
-        <div class="footer">
-            <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="" target="_blank">DexignLab</a> 2022</p>
-            </div>
-        </div>
+     
         <!--**********************************
             Footer end
         ***********************************-->

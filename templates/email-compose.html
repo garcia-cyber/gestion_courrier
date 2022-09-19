@@ -146,7 +146,7 @@
 							
 							<li class="nav-item dropdown  header-profile">
 								<a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
-									<img src="{{url_for('static',filename='images/big-wind.png')}}" width="56" alt="">
+									<img src="static/photo/{{session['photo_agent']}}" width="56" alt="">
 								</a>
 								<div class="dropdown-menu dropdown-menu-end">
 									<a href="/profile" class="dropdown-item ai-icon">
@@ -196,6 +196,7 @@
                             <li><a href="/profile">Profile</a></li>
 							<li><a href="/update_password/{{session['id_agent']}}">Change Mot de passe</a></li>
                             <li><a href="/chat">Chat</a></li>
+                            <li><a href="/boite">Messagerie</a></li>
 						
                           
                         </ul>
@@ -211,7 +212,8 @@
 							
                             	<li><a href="/message">{{'courriers Entree'.title() }}</a></li>
                             	<li><a href="/traite">{{'courriers traitee'.title()}}</a></li>
-								<li><a href="">{{'Courriers Approuve'.title()}}</a></li>
+								
+                                <li><a href="/doc">{{'Courriers Approuve'.title()}}</a></li>
 							
                         </ul>
                     </li>
@@ -228,7 +230,7 @@
 							
 							
 								<li><a href="/traite">{{'courriers traitee'.title()}}</a></li>
-								<li><a href="">{{'Courriers Approuve'.title()}}</a></li>
+								<li><a href="/doc">{{'Courriers Approuve'.title()}}</a></li>
 
 						
 							
@@ -349,17 +351,24 @@
                                 <div class="email-right-box ms-0 ms-sm-4 ms-sm-0">
                                  
                                     <div class="compose-content">
-                                        <form action="#" class="">
+                                        <form action="/approuve" class="" method="post" enctype="multipart/form-data">
+                                            {%with messages = get_flashed_messages() %}
+                                                {% if messages %}
+                                                    {% for i in messages %}
+                                                        <div class="alert alert-info">{{i}}</div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endwith %}
                                             <!-- <div class="mb-3">
                                                 <select name="" id=""  class="form-control bg-transparent" >
 													<option value="">choix de l'envoi</option>
 												</select>
                                             </div> -->
                                             <div class="mb-3">
-                                                <input type="text" class="form-control bg-transparent" placeholder=" Subject:">
+                                                <input type="text" name="sujet" class="form-control bg-transparent" placeholder=" Subject:">
                                             </div>
                                             <div class="mb-3">
-                                                <textarea id="email-compose-editor" class="textarea_editor form-control bg-transparent" rows="15" placeholder="Enter text ..."></textarea>
+                                                <textarea id="email-compose-editor" name="texte" class="textarea_editor form-control bg-transparent" rows="15" placeholder="Enter text ..."></textarea>
                                             </div>
 
 											<h5 class="mb-4"><i class="fa fa-paperclip"></i> Attatchment</h5>
@@ -368,8 +377,8 @@
 											</div>
 
 											<div class="text-start mt-4 mb-3">
-												<button class="btn btn-primary btn-sl-sm me-2" type="button"><span class="me-2"><i class="fa fa-paper-plane"></i></span>Send</button>
-												<button class="btn btn-danger light btn-sl-sm" type="button"><span class="me-2"><i class="fa fa-times"></i></span>Discard</button>
+												<button class="btn btn-primary btn-sl-sm me-2" type="submit"><span class="me-2"><i class="fa fa-paper-plane"></i></span>Send</button>
+												<button class="btn btn-danger light btn-sl-sm" type="reset"><span class="me-2"><i class="fa fa-times"></i></span>Discard</button>
 											</div>
 
                                         </form>

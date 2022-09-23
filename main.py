@@ -73,8 +73,8 @@ def index_send():
 
             if  session['fonction_agent'] == 1:
                 return redirect(url_for('admin'))
-            elif session['fonction_agent'] == 2 or session['fonction_agent'] == 6:
-                return redirect(url_for('boite'))
+            elif session['fonction_agent'] == 2 :
+                return redirect(url_for('reception'))
             elif session['fonction_agent'] == 3:
                 return redirect(url_for('dircab')) 
             elif session['fonction_agent'] == 4:
@@ -412,7 +412,7 @@ def update_password(id_agent):
         mdp   = request.form['mdp']
         conf  = request.form.get('conf')
 
-        call = session['id_agent'] 
+        call = session['id_agent']  
 
         #verification 
 
@@ -436,7 +436,7 @@ def update_password(id_agent):
             
         else:
             flash('ancien mot de passe incorrecte')  
-            return   redirect(url_for('profile'))
+            
 
     cur = sql.cursor()
     cur.execute('select * from agents where id_agent = %s',[id_agent,])
@@ -600,16 +600,20 @@ def transfert(id_traitement):
 ######################################################### Chat
 
 """
-@app.route('/chat')
-def chat(): 
+@app.route('/reception')
+def reception(): 
     if 'index_true' in session:
        
         choose =  sql.cursor()
         choose.execute('select * from agents ')
         try_choose = choose.fetchall()
-        return render_template('chat.html', a = session['index_true'], dat =  try_choose)
+        return render_template('reception.html', a = session['index_true'], dat =  try_choose)
     else:
         return redirect(url_for('index')) 
+@app.route('/reception_send',methods = ['POST','GET'])   
+def reception_send():
+    if request.method == 'POST':
+        pass     
 @app.route('/chat_send',methods = ['POST','GET'])
 def chat_send():
     if request.method == 'POST':
@@ -651,11 +655,11 @@ def boite():
         #affichage des messages 
         a = session['id_agent']
         b = session['fonction_agent']
-        msg = sql.cursor()
-        msg.execute('select * from chats where destinataire = %s  order by heure desc ',(a,))
-        te = msg.fetchall()
+        # msg = sql.cursor()
+        # msg.execute('select * from chats where destinataire = %s  order by heure desc ',(a,))
+        # te = msg.fetchall()
 
-        return render_template('messages.html', a = session['index_true'], dat =  try_choose,mes = te)
+        return render_template('messages.html', a = session['index_true'], dat =  try_choose)
     else:
         return redirect(url_for('index')) 
 

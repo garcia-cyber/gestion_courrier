@@ -125,7 +125,9 @@
                     {% if session['fonction_agent'] == 1 %}
 
                         {% include '_call/admin_menu.html'%}
-                    
+
+                    {% elif session['fonction_agent'] == 2 %}    
+                        {% include '_call/reception_menu.html' %}
                    
                     {%endif%}
                     
@@ -208,7 +210,7 @@
                                                         {%if session['fonction_agent'] == 1 %}
                                                             <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{'admin'.title()}}</div>
                                                         {% elif session['fonction_agent'] == 2 %}  
-                                                            <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{'Secretaire generale'.title()}}</div>     
+                                                            <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{'receptionniste'.title()}}</div>     
                                                         {% elif session['fonction_agent'] == 3 %}  
                                                             <div class="form-control" required="" style="padding-top: 10px;position: relative;">{{'dircab'.title()}}</di>
                                                         {% elif session['fonction_agent'] == 4 %}  

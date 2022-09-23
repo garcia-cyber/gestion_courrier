@@ -14,11 +14,11 @@ create table fonctions(
 
 -- ajout par defaut
 
-insert into fonctions(libelle_fonction)values('admin'),('service informatique') , ('dircab');
+insert into fonctions(libelle_fonction)values('Admin'),('Receptionniste') , ('Secretariat'),('Dircab'),('Dircaba'),('Ministre');
 
 -- ajout autre information
 
-insert into fonctions(libelle_fonction)values('ministre'), ('conseiller');
+insert into fonctions(libelle_fonction)values('conseiller');
 
 -- table agent
 
@@ -33,11 +33,26 @@ create table if not exists agents(
     constraint pk_agent_name primary key(id_agent)
 );
 
+
+insert into agents(nom_agent,email_agent,password_agent,fk_fonction)values('admin','admin@gmail.com','admin',1);
+
 -- update agent
 
 alter table agents add dateEnregistrement date default current_date();
 alter table agents modify dateEnregistrement date default current_date();
  -- Non ajouter
+
+ -- mise en jour de la table fonctions
+
+ update fonctions set libelle_fonction = 'receptionniste' where id_fonction = 2;
+ update fonctions set libelle_fonction = 'secretariat' where id_fonction = 6;
+
+ insert into fonctions (libelle_fonction)values('dircaba');
+ 
+
+
+
+
 
 alter table agents add sexe varchar(10);
 alter table agents add statut longtext;

@@ -613,7 +613,14 @@ def reception():
 @app.route('/reception_send',methods = ['POST','GET'])   
 def reception_send():
     if request.method == 'POST':
-        pass     
+        jointe = request.files['file']
+
+        if jointe.filename != '':
+            pass
+        else:
+            flash("veillez mettre un fichier")
+            return redirect(url_for('reception'))
+                
 @app.route('/chat_send',methods = ['POST','GET'])
 def chat_send():
     if request.method == 'POST':
